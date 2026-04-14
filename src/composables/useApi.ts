@@ -2,14 +2,9 @@ export type ApiResult<T> =
   | { ok: true; data: T }
   | { ok: false; status: number; message: string }
 
-function getIssuerUrl(): string {
-  return import.meta.env.VITE_ORION_ISSUER || ''
-}
-
 export async function apiGet<T>(path: string, params?: Record<string, string>): Promise<ApiResult<T>> {
   try {
-    const base = path.startsWith('/authorize') ? getIssuerUrl() : ''
-    const url = new URL(`${base}${path}`, window.location.origin)
+    const url = new URL(path, window.location.origin)
     if (params) {
       for (const [key, value] of Object.entries(params)) {
         url.searchParams.set(key, value)
@@ -29,9 +24,7 @@ export async function apiGet<T>(path: string, params?: Record<string, string>): 
 
 export async function apiPost<T>(path: string, body?: unknown): Promise<ApiResult<T>> {
   try {
-    const base = path.startsWith('/authorize') ? getIssuerUrl() : ''
-    const url = `${base}${path}`
-    const response = await fetch(url, {
+    const response = await fetch(path, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: body !== undefined ? JSON.stringify(body) : undefined,
