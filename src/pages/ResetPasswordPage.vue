@@ -1,0 +1,139 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+import { apiPost } from '../composables/useApi'
+
+const route = useRoute()
+const token = route.query.token as string | undefined
+
+const password = ref('')
+const confirmPassword = ref('')
+const loading = ref(false)
+const error = ref<string | null>(null)
+const success = ref(false)
+
+async function handleSubmit() {
+  error.value = null
+
+  if (password.value.length < 8) {
+    error.value = 'Le mot de passe doit contenir au moins 8 caractères.'
+    return
+  }
+
+  if (password.value !== confirmPassword.value) {
+    error.value = 'Les mots de passe ne correspondent pas.'
+    return
+  }
+
+  loading.value = true
+
+  const result = await apiPost('/api/v1/auth/reset-password', {
+    token: token,
+    new_password: password.value,
+  })
+
+  loading.value = false
+
+  if (!result.ok) {
+    error.value = result.message
+    return
+  }
+
+  success.value = true
+}
+</script>
+
+<template>
+  <div class="reset-password-page">
+    <h2>Réinitialiser le mot de passe</h2>
+
+    <Message v-if="!token" severity="error" :closable="false">
+      Lien de réinitialisation invalide.
+    </Message>
+
+    <template v-else-if="success">
+      <Message severity="success" :closable="false">
+        Mot de passe réinitialisé avec succès.
+      </Message>
+      <RouterLink to="/login" class="back-link">Se connecter</RouterLink>
+    </template>
+
+    <template v-else>
+      <Message v-if="error" severity="error" :closable="false" class="mb-3">{{ error }}</Message>
+
+      <form @submit.prevent="handleSubmit" class="form">
+        <div class="field">
+          <label for="password">Nouveau mot de passe</label>
+          <Password
+            id="password"
+            v-model="password"
+            :feedback="false"
+            toggle-mask
+            required
+            fluid
+          />
+        </div>
+
+        <div class="field">
+          <label for="confirmPassword">Confirmer le mot de passe</label>
+          <Password
+            id="confirmPassword"
+            v-model="confirmPassword"
+            :feedback="false"
+            toggle-mask
+            required
+            fluid
+          />
+        </div>
+
+        <Button
+          type="submit"
+          label="Réinitialiser"
+          :loading="loading"
+          fluid
+        />
+      </form>
+    </template>
+  </div>
+</template>
+
+<style scoped>
+.reset-password-page h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field label {
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.back-link {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: var(--p-primary-color);
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.mb-3 {
+  margin-bottom: 0.75rem;
+}
+</style>
