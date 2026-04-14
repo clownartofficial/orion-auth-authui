@@ -29,5 +29,5 @@ jobs:
           provenance: false
           sbom: false
           tags: |
-            git.nhsoul.fr/nhpro/orion-auth-frontend:${{ github.event.release.tag_name || inputs.tag || 'latest' }}
-            git.nhsoul.fr/nhpro/orion-auth-frontend:latest
+            git.nhsoul.fr/nhpro/orion-auth-authui:${{ github.event.release.tag_name || inputs.tag || 'latest' }}
+            git.nhsoul.fr/nhpro/orion-auth-authui:latest
