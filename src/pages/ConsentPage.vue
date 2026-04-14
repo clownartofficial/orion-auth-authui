@@ -3,9 +3,15 @@ import { ref } from 'vue'
 import { apiPost } from '../composables/useApi'
 import { useAuthState } from '../composables/useAuthState'
 
+const scopeDescriptions: Record<string, string> = {
+  openid: 'Vérifier votre identité',
+  profile: 'Accéder à votre nom et photo de profil',
+  email: 'Voir votre adresse e-mail',
+  offline_access: 'Rester connecté en votre nom',
+}
+
 const { state } = useAuthState()
 
-const grantedScopes = ref<string[]>([...state.requestedScopes])
 const loading = ref(false)
 const error = ref<string | null>(null)
 
@@ -19,7 +25,7 @@ async function handleApprove() {
     state?: string
   }>('/authorize/consent', {
     request_id: state.requestId,
-    scopes_granted: grantedScopes.value,
+    scopes_granted: state.requestedScopes,
   })
 
   loading.value = false
@@ -51,16 +57,11 @@ function handleDeny() {
 
     <Message v-if="error" severity="error" :closable="false" class="msg">{{ error }}</Message>
 
-    <div class="scopes">
-      <div v-for="scope in state.requestedScopes" :key="scope" class="scope-item">
-        <Checkbox
-          v-model="grantedScopes"
-          :input-id="scope"
-          :value="scope"
-        />
-        <label :for="scope">{{ scope }}</label>
-      </div>
-    </div>
+    <ul class="scopes">
+      <li v-for="scope in state.requestedScopes" :key="scope" class="scope-item">
+        {{ scopeDescriptions[scope] || scope }}
+      </li>
+    </ul>
 
     <div class="actions">
       <Button
@@ -116,16 +117,9 @@ function handleDeny() {
 }
 
 .scope-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.scope-item label {
-  font-family: var(--nh-mono);
-  font-size: 12px;
+  font-size: 13px;
   color: var(--nh-text);
-  cursor: pointer;
+  padding: 2px 0;
 }
 
 .actions {
