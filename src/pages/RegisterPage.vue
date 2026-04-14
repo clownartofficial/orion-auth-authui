@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { apiPost } from '../composables/useApi'
+import { useSettings } from '../composables/useSettings'
 
 const route = useRoute()
+const router = useRouter()
+const { registrationEnabled, fetchSettings } = useSettings()
 
 const inviteToken = computed(() => route.query.invite as string | undefined)
 const inviteEmail = computed(() => route.query.email as string | undefined)
@@ -16,6 +19,15 @@ const confirmPassword = ref('')
 const loading = ref(false)
 const error = ref<string | null>(null)
 const success = ref(false)
+
+onMounted(async () => {
+  if (!isInvite.value) {
+    await fetchSettings()
+    if (registrationEnabled.value === false) {
+      router.replace('/login')
+    }
+  }
+})
 
 async function handleSubmit() {
   error.value = null

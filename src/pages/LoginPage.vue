@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { apiPost } from '../composables/useApi'
 import { useAuthState } from '../composables/useAuthState'
+import { useSettings } from '../composables/useSettings'
 
 const router = useRouter()
 const { state, updateFromLoginResponse } = useAuthState()
+const { registrationEnabled, fetchSettings } = useSettings()
+
+onMounted(fetchSettings)
 
 const email = ref('')
 const password = ref('')
@@ -108,7 +112,7 @@ async function handleSubmit() {
 
       <div class="links">
         <RouterLink to="/forgot-password">Mot de passe oublié ?</RouterLink>
-        <RouterLink to="/register">Créer un compte</RouterLink>
+        <RouterLink v-if="registrationEnabled !== false" to="/register">Créer un compte</RouterLink>
       </div>
     </form>
   </div>
