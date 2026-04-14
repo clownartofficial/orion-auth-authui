@@ -1,9 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { apiPost } from '../composables/useApi'
 
+const route = useRoute()
+
+const inviteToken = computed(() => route.query.invite as string | undefined)
+const inviteEmail = computed(() => route.query.email as string | undefined)
+const isInvite = computed(() => !!inviteToken.value)
+
 const displayName = ref('')
-const email = ref('')
+const email = ref(inviteEmail.value ?? '')
 const password = ref('')
 const confirmPassword = ref('')
 const loading = ref(false)
@@ -25,23 +32,44 @@ async function handleSubmit() {
 
   loading.value = true
 
-  const result = await apiPost('/api/v1/auth/register', {
-    email: email.value,
-    password: password.value,
-    display_name: displayName.value || undefined,
-  })
+  if (isInvite.value) {
+    const result = await apiPost('/api/v1/auth/register/invite', {
+      token: inviteToken.value,
+      password: password.value,
+      display_name: displayName.value || undefined,
+    })
 
-  loading.value = false
+    loading.value = false
 
-  if (!result.ok) {
-    if (result.status === 409) {
-      error.value = 'Un compte existe déjà avec cet email.'
-    } else if (result.status === 400) {
-      error.value = result.message
-    } else {
-      error.value = result.message
+    if (!result.ok) {
+      if (result.status === 400) {
+        error.value = 'Invitation invalide ou expirée.'
+      } else if (result.status === 409) {
+        error.value = 'Cette invitation a déjà été utilisée.'
+      } else {
+        error.value = result.message
+      }
+      return
     }
-    return
+  } else {
+    const result = await apiPost('/api/v1/auth/register', {
+      email: email.value,
+      password: password.value,
+      display_name: displayName.value || undefined,
+    })
+
+    loading.value = false
+
+    if (!result.ok) {
+      if (result.status === 403) {
+        error.value = "L'inscription publique est désactivée. Contactez un administrateur pour recevoir une invitation."
+      } else if (result.status === 409) {
+        error.value = 'Un compte existe déjà avec cet email.'
+      } else {
+        error.value = result.message
+      }
+      return
+    }
   }
 
   success.value = true
@@ -54,9 +82,16 @@ async function handleSubmit() {
 
     <template v-if="success">
       <Message severity="success" :closable="false">
-        Compte créé avec succès. Vérifiez votre email pour activer votre compte.
+        <template v-if="isInvite">
+          Compte créé avec succès. Vous pouvez maintenant vous connecter.
+        </template>
+        <template v-else>
+          Compte créé avec succès. Vérifiez votre email pour activer votre compte.
+        </template>
       </Message>
-      <RouterLink to="/login" class="back-link">Retour à la connexion</RouterLink>
+      <RouterLink to="/login" class="back-link">
+        {{ isInvite ? 'Se connecter' : 'Retour à la connexion' }}
+      </RouterLink>
     </template>
 
     <template v-else>
@@ -80,6 +115,7 @@ async function handleSubmit() {
             v-model="email"
             type="email"
             placeholder="vous@exemple.com"
+            :disabled="isInvite"
             required
             fluid
           />
