@@ -73,10 +73,11 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <div class="login-page">
-    <h2>Connexion</h2>
+  <div class="page">
+    <h2 class="page-title">Connexion</h2>
+    <p class="page-sub">$ auth --login</p>
 
-    <Message v-if="error" severity="error" :closable="false" class="mb-3">{{ error }}</Message>
+    <Message v-if="error" severity="error" :closable="false" class="msg">{{ error }}</Message>
 
     <form @submit.prevent="handleSubmit" class="form">
       <div class="field">
@@ -119,8 +120,20 @@ async function handleSubmit() {
 </template>
 
 <style scoped>
-.login-page h2 {
+.page-title {
   text-align: center;
+  font-family: var(--nh-sans);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  margin-bottom: 2px;
+}
+
+.page-sub {
+  text-align: center;
+  font-family: var(--nh-mono);
+  font-size: 11px;
+  color: var(--nh-muted);
   margin-bottom: 1.5rem;
 }
 
@@ -133,30 +146,36 @@ async function handleSubmit() {
 .field {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 6px;
 }
 
 .field label {
-  font-weight: 500;
-  font-size: 0.875rem;
+  font-family: var(--nh-mono);
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--nh-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .links {
   display: flex;
   justify-content: space-between;
-  font-size: 0.875rem;
+  font-family: var(--nh-mono);
+  font-size: 12px;
 }
 
 .links a {
-  color: var(--p-primary-color);
+  color: var(--nh-accent);
   text-decoration: none;
+  transition: color 0.15s;
 }
 
 .links a:hover {
-  text-decoration: underline;
+  color: var(--nh-accent-hover);
 }
 
-.mb-3 {
-  margin-bottom: 0.75rem;
+.msg {
+  margin-bottom: 0.5rem;
 }
 </style>

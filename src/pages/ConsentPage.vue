@@ -37,20 +37,19 @@ async function handleApprove() {
 }
 
 function handleDeny() {
-  // Redirect back with error=access_denied if we have info
-  // In practice, the backend might handle this via a deny endpoint
   window.history.back()
 }
 </script>
 
 <template>
-  <div class="consent-page">
-    <h2>Autorisation requise</h2>
-    <p class="subtitle">
+  <div class="page">
+    <h2 class="page-title">Autorisation requise</h2>
+    <p class="page-sub">$ auth --consent</p>
+    <p class="page-desc">
       <strong>{{ state.clientName }}</strong> souhaite accéder à votre compte.
     </p>
 
-    <Message v-if="error" severity="error" :closable="false" class="mb-3">{{ error }}</Message>
+    <Message v-if="error" severity="error" :closable="false" class="msg">{{ error }}</Message>
 
     <div class="scopes">
       <div v-for="scope in state.requestedScopes" :key="scope" class="scope-item">
@@ -81,15 +80,27 @@ function handleDeny() {
 </template>
 
 <style scoped>
-.consent-page h2 {
+.page-title {
   text-align: center;
+  font-family: var(--nh-sans);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  margin-bottom: 2px;
+}
+
+.page-sub {
+  text-align: center;
+  font-family: var(--nh-mono);
+  font-size: 11px;
+  color: var(--nh-muted);
   margin-bottom: 0.5rem;
 }
 
-.subtitle {
+.page-desc {
   text-align: center;
-  color: var(--p-text-muted-color);
-  font-size: 0.875rem;
+  font-size: 13px;
+  color: var(--nh-muted);
   margin-bottom: 1.5rem;
 }
 
@@ -98,16 +109,22 @@ function handleDeny() {
   flex-direction: column;
   gap: 0.75rem;
   margin-bottom: 1.5rem;
+  padding: 14px;
+  background: var(--nh-bg);
+  border: 1px solid var(--nh-border);
+  border-radius: 8px;
 }
 
 .scope-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 10px;
 }
 
 .scope-item label {
-  font-size: 0.875rem;
+  font-family: var(--nh-mono);
+  font-size: 12px;
+  color: var(--nh-text);
   cursor: pointer;
 }
 
@@ -117,7 +134,7 @@ function handleDeny() {
   justify-content: flex-end;
 }
 
-.mb-3 {
-  margin-bottom: 0.75rem;
+.msg {
+  margin-bottom: 0.5rem;
 }
 </style>

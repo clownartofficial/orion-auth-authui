@@ -19,8 +19,9 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <div class="forgot-password-page">
-    <h2>Mot de passe oublié</h2>
+  <div class="page">
+    <h2 class="page-title">Mot de passe oublié</h2>
+    <p class="page-sub">$ auth --reset-request</p>
 
     <template v-if="submitted">
       <Message severity="info" :closable="false">
@@ -30,7 +31,7 @@ async function handleSubmit() {
     </template>
 
     <template v-else>
-      <p class="subtitle">Entrez votre email pour recevoir un lien de réinitialisation.</p>
+      <p class="page-desc">Entrez votre email pour recevoir un lien de réinitialisation.</p>
 
       <form @submit.prevent="handleSubmit" class="form">
         <div class="field">
@@ -61,15 +62,27 @@ async function handleSubmit() {
 </template>
 
 <style scoped>
-.forgot-password-page h2 {
+.page-title {
   text-align: center;
+  font-family: var(--nh-sans);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  margin-bottom: 2px;
+}
+
+.page-sub {
+  text-align: center;
+  font-family: var(--nh-mono);
+  font-size: 11px;
+  color: var(--nh-muted);
   margin-bottom: 0.5rem;
 }
 
-.subtitle {
+.page-desc {
   text-align: center;
-  color: var(--p-text-muted-color);
-  font-size: 0.875rem;
+  font-size: 13px;
+  color: var(--nh-muted);
   margin-bottom: 1.5rem;
 }
 
@@ -82,34 +95,41 @@ async function handleSubmit() {
 .field {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 6px;
 }
 
 .field label {
-  font-weight: 500;
-  font-size: 0.875rem;
+  font-family: var(--nh-mono);
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--nh-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .links {
   text-align: center;
-  font-size: 0.875rem;
+  font-family: var(--nh-mono);
+  font-size: 12px;
 }
 
 .links a,
 .back-link {
-  color: var(--p-primary-color);
+  color: var(--nh-accent);
   text-decoration: none;
+  transition: color 0.15s;
 }
 
 .links a:hover,
 .back-link:hover {
-  text-decoration: underline;
+  color: var(--nh-accent-hover);
 }
 
 .back-link {
   display: block;
   text-align: center;
   margin-top: 1rem;
-  font-size: 0.875rem;
+  font-family: var(--nh-mono);
+  font-size: 12px;
 }
 </style>

@@ -62,11 +62,12 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <div class="mfa-page">
-    <h2>Vérification en deux étapes</h2>
-    <p class="subtitle">Entrez le code à 6 chiffres de votre application d'authentification.</p>
+  <div class="page">
+    <h2 class="page-title">Vérification MFA</h2>
+    <p class="page-sub">$ auth --verify-totp</p>
+    <p class="page-desc">Entrez le code à 6 chiffres de votre application d'authentification.</p>
 
-    <Message v-if="error" severity="error" :closable="false" class="mb-3">{{ error }}</Message>
+    <Message v-if="error" severity="error" :closable="false" class="msg">{{ error }}</Message>
 
     <div class="otp-container">
       <InputOtp v-model="code" :length="6" integer-only :disabled="loading" />
@@ -83,15 +84,27 @@ async function handleSubmit() {
 </template>
 
 <style scoped>
-.mfa-page h2 {
+.page-title {
   text-align: center;
+  font-family: var(--nh-sans);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  margin-bottom: 2px;
+}
+
+.page-sub {
+  text-align: center;
+  font-family: var(--nh-mono);
+  font-size: 11px;
+  color: var(--nh-muted);
   margin-bottom: 0.5rem;
 }
 
-.subtitle {
+.page-desc {
   text-align: center;
-  color: var(--p-text-muted-color);
-  font-size: 0.875rem;
+  font-size: 13px;
+  color: var(--nh-muted);
   margin-bottom: 1.5rem;
 }
 
@@ -101,7 +114,7 @@ async function handleSubmit() {
   margin-bottom: 1.5rem;
 }
 
-.mb-3 {
-  margin-bottom: 0.75rem;
+.msg {
+  margin-bottom: 0.5rem;
 }
 </style>

@@ -31,44 +31,61 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="verify-email-page">
-    <h2>Vérification de l'email</h2>
+  <div class="page">
+    <h2 class="page-title">Vérification de l'email</h2>
+    <p class="page-sub">$ auth --verify-email</p>
 
-    <ProgressSpinner v-if="loading" />
+    <div class="content">
+      <ProgressSpinner v-if="loading" />
 
-    <template v-if="success">
-      <Message severity="success" :closable="false">
-        Votre email a été vérifié avec succès.
-      </Message>
-      <RouterLink to="/login" class="back-link">Se connecter</RouterLink>
-    </template>
+      <template v-if="success">
+        <Message severity="success" :closable="false">
+          Votre email a été vérifié avec succès.
+        </Message>
+        <RouterLink to="/login" class="back-link">Se connecter</RouterLink>
+      </template>
 
-    <template v-if="error">
-      <Message severity="error" :closable="false">{{ error }}</Message>
-    </template>
+      <template v-if="error">
+        <Message severity="error" :closable="false">{{ error }}</Message>
+      </template>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.verify-email-page {
+.page-title {
+  text-align: center;
+  font-family: var(--nh-sans);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  margin-bottom: 2px;
+}
+
+.page-sub {
+  text-align: center;
+  font-family: var(--nh-mono);
+  font-size: 11px;
+  color: var(--nh-muted);
+  margin-bottom: 1.5rem;
+}
+
+.content {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  padding: 1rem 0;
-}
-
-.verify-email-page h2 {
-  margin-bottom: 0.5rem;
 }
 
 .back-link {
-  font-size: 0.875rem;
-  color: var(--p-primary-color);
+  font-family: var(--nh-mono);
+  font-size: 12px;
+  color: var(--nh-accent);
   text-decoration: none;
+  transition: color 0.15s;
 }
 
 .back-link:hover {
-  text-decoration: underline;
+  color: var(--nh-accent-hover);
 }
 </style>

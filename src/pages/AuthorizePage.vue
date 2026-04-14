@@ -53,14 +53,16 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="authorize-page">
-    <ProgressSpinner v-if="loading && !error" />
-    <Message v-if="error" severity="error">{{ error }}</Message>
+  <div class="page">
+    <div class="content">
+      <ProgressSpinner v-if="loading && !error" />
+      <Message v-if="error" severity="error" :closable="false">{{ error }}</Message>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.authorize-page {
+.content {
   display: flex;
   flex-direction: column;
   align-items: center;

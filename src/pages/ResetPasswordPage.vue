@@ -44,8 +44,9 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <div class="reset-password-page">
-    <h2>Réinitialiser le mot de passe</h2>
+  <div class="page">
+    <h2 class="page-title">Réinitialiser le mot de passe</h2>
+    <p class="page-sub">$ auth --reset-password</p>
 
     <Message v-if="!token" severity="error" :closable="false">
       Lien de réinitialisation invalide.
@@ -59,7 +60,7 @@ async function handleSubmit() {
     </template>
 
     <template v-else>
-      <Message v-if="error" severity="error" :closable="false" class="mb-3">{{ error }}</Message>
+      <Message v-if="error" severity="error" :closable="false" class="msg">{{ error }}</Message>
 
       <form @submit.prevent="handleSubmit" class="form">
         <div class="field">
@@ -98,8 +99,20 @@ async function handleSubmit() {
 </template>
 
 <style scoped>
-.reset-password-page h2 {
+.page-title {
   text-align: center;
+  font-family: var(--nh-sans);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  margin-bottom: 2px;
+}
+
+.page-sub {
+  text-align: center;
+  font-family: var(--nh-mono);
+  font-size: 11px;
+  color: var(--nh-muted);
   margin-bottom: 1.5rem;
 }
 
@@ -112,28 +125,34 @@ async function handleSubmit() {
 .field {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 6px;
 }
 
 .field label {
-  font-weight: 500;
-  font-size: 0.875rem;
+  font-family: var(--nh-mono);
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--nh-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .back-link {
   display: block;
   text-align: center;
   margin-top: 1rem;
-  font-size: 0.875rem;
-  color: var(--p-primary-color);
+  font-family: var(--nh-mono);
+  font-size: 12px;
+  color: var(--nh-accent);
   text-decoration: none;
+  transition: color 0.15s;
 }
 
 .back-link:hover {
-  text-decoration: underline;
+  color: var(--nh-accent-hover);
 }
 
-.mb-3 {
-  margin-bottom: 0.75rem;
+.msg {
+  margin-bottom: 0.5rem;
 }
 </style>
