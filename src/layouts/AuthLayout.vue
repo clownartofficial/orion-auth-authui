@@ -10,9 +10,6 @@
           <slot />
         </template>
       </Card>
-      <div class="auth-footer">
-        <span>Powered by NнPro</span>
-      </div>
     </div>
   </div>
 </template>
@@ -64,11 +61,4 @@
   width: 100%;
 }
 
-.auth-footer {
-  text-align: center;
-  font-family: var(--nh-mono);
-  font-size: 11px;
-  color: var(--nh-muted);
-  letter-spacing: 0.04em;
-}
 </style>
