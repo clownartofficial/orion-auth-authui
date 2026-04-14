@@ -12,6 +12,8 @@ const scopeDescriptions: Record<string, string> = {
 
 const { state } = useAuthState()
 
+const uniqueScopes = [...new Set(state.requestedScopes)]
+
 const loading = ref(false)
 const error = ref<string | null>(null)
 
@@ -25,7 +27,7 @@ async function handleApprove() {
     state?: string
   }>('/authorize/consent', {
     request_id: state.requestId,
-    scopes_granted: state.requestedScopes,
+    scopes_granted: uniqueScopes,
   })
 
   loading.value = false
@@ -58,7 +60,7 @@ function handleDeny() {
     <Message v-if="error" severity="error" :closable="false" class="msg">{{ error }}</Message>
 
     <ul class="scopes">
-      <li v-for="scope in state.requestedScopes" :key="scope" class="scope-item">
+      <li v-for="scope in uniqueScopes" :key="scope" class="scope-item">
         {{ scopeDescriptions[scope] || scope }}
       </li>
     </ul>
