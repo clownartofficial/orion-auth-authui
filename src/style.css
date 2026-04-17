@@ -130,37 +130,12 @@ html, body {
 }
 
 /* Password wrapper */
-.p-password {
-  border-radius: 8px !important;
-  transition: box-shadow 0.15s, border-color 0.15s !important;
-}
-
-.p-password:focus-within {
-  box-shadow: 0 0 0 2px rgba(127, 119, 221, 0.15) !important;
-}
-
-.p-password .p-inputtext {
-  border-right: none !important;
-  border-top-right-radius: 0 !important;
-  border-bottom-right-radius: 0 !important;
-  box-shadow: none !important;
-}
-
 .p-password .p-password-toggle {
   background: var(--nh-bg) !important;
   border: 1px solid var(--nh-border2) !important;
   border-left: none !important;
   color: var(--nh-muted) !important;
   border-radius: 0 8px 8px 0 !important;
-  transition: border-color 0.15s !important;
-}
-
-.p-password:focus-within .p-inputtext {
-  border-color: var(--nh-accent) !important;
-}
-
-.p-password:focus-within .p-password-toggle {
-  border-color: var(--nh-accent) !important;
 }
 
 /* InputOtp */
