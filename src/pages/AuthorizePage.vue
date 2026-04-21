@@ -13,7 +13,7 @@ const error = ref<string | null>(null)
 
 onMounted(async () => {
   const params: Record<string, string> = {}
-  const keys = ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'code_challenge', 'code_challenge_method']
+  const keys = ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'code_challenge', 'code_challenge_method', 'nonce']
   for (const key of keys) {
     const value = route.query[key]
     if (typeof value === 'string') {
