@@ -39,6 +39,10 @@ const router = createRouter({
       component: () => import('../pages/VerifyEmailPage.vue'),
     },
     {
+      path: '/device',
+      component: () => import('../pages/DevicePage.vue'),
+    },
+    {
       path: '/:pathMatch(.*)*',
       redirect: '/authorize',
     },
