@@ -13,7 +13,7 @@ const error = ref<string | null>(null)
 
 onMounted(async () => {
   const params: Record<string, string> = {}
-  const keys = ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'code_challenge', 'code_challenge_method', 'nonce']
+  const keys = ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'code_challenge', 'code_challenge_method', 'nonce', 'audience']
   for (const key of keys) {
     const value = route.query[key]
     if (typeof value === 'string') {
@@ -34,6 +34,11 @@ onMounted(async () => {
     scopes_requested: string[]
     requires_login: boolean
     requires_consent: boolean
+    resource?: {
+      name: string
+      identifier: string
+      permissions: { name: string; description: string | null }[]
+    }
   }>('/authorize', params)
 
   if (!result.ok) {

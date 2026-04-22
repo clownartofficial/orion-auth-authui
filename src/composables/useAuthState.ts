@@ -1,5 +1,11 @@
 import { reactive, readonly } from 'vue'
 
+export interface ResourceInfo {
+  name: string
+  identifier: string
+  permissions: { name: string; description: string | null }[]
+}
+
 export interface AuthState {
   requestId: string | null
   clientName: string | null
@@ -7,6 +13,7 @@ export interface AuthState {
   requestedScopes: string[]
   requiresLogin: boolean
   requiresConsent: boolean
+  resource: ResourceInfo | null
 }
 
 const state = reactive<AuthState>({
@@ -16,6 +23,7 @@ const state = reactive<AuthState>({
   requestedScopes: [],
   requiresLogin: false,
   requiresConsent: false,
+  resource: null,
 })
 
 export function useAuthState() {
@@ -26,6 +34,7 @@ export function useAuthState() {
     scopes_requested: string[]
     requires_login: boolean
     requires_consent: boolean
+    resource?: ResourceInfo
   }) {
     state.requestId = data.request_id
     state.clientName = data.client_name
@@ -33,6 +42,7 @@ export function useAuthState() {
     state.requestedScopes = data.scopes_requested
     state.requiresLogin = data.requires_login
     state.requiresConsent = data.requires_consent
+    state.resource = data.resource ?? null
   }
 
   function updateFromLoginResponse(data: {
@@ -52,6 +62,7 @@ export function useAuthState() {
     state.requestedScopes = []
     state.requiresLogin = false
     state.requiresConsent = false
+    state.resource = null
   }
 
   return {
