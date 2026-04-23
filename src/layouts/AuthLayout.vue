@@ -1,64 +1,113 @@
+<script setup lang="ts">
+import AuthHero from '../components/AuthHero.vue'
+</script>
+
 <template>
-  <div class="auth-layout">
-    <div class="auth-container">
-      <div class="auth-logo">
-        <div class="logo-dot"></div>
-        <span>Orion</span>
+  <div class="auth-shell">
+    <AuthHero />
+
+    <div class="auth-panel">
+      <div class="auth-panel-top">
+        <div class="tenant-badge">
+          tenant: <strong>orionauth</strong>
+        </div>
       </div>
-      <Card class="auth-card">
-        <template #content>
-          <slot />
-        </template>
-      </Card>
+
+      <div class="auth-card">
+        <slot />
+      </div>
+
+      <div class="auth-panel-bottom">
+        <span>&copy; 2026 OrionAuth</span>
+        <div class="auth-panel-links">
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <a href="#">Docs</a>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.auth-layout {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100%;
-  padding: 2rem;
-  background: var(--nh-bg);
+.auth-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 520px;
+  background: var(--bg-0);
+  position: relative;
+  overflow: hidden;
 }
 
-.auth-container {
-  width: 100%;
-  max-width: 420px;
+.auth-panel {
+  padding: 56px 56px 40px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  min-height: 100vh;
+  background: var(--bg-0);
 }
 
-.auth-logo {
+.auth-panel-top {
   display: flex;
   align-items: center;
-  gap: 10px;
-  justify-content: center;
-  font-family: var(--nh-mono);
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--nh-text);
-  letter-spacing: -0.02em;
+  justify-content: space-between;
+  margin-bottom: auto;
 }
 
-.logo-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--nh-accent);
-  animation: pulse 2.5s ease-in-out infinite;
+.tenant-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  border-radius: var(--r-full);
+  background: var(--bg-inset);
+  border: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--fg-2);
 }
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
+.tenant-badge strong {
+  color: var(--fg-0);
+  font-weight: 500;
 }
 
 .auth-card {
   width: 100%;
+  max-width: 400px;
+  margin: 40px auto;
+  animation: fade-in 320ms cubic-bezier(0.2, 0, 0, 1);
 }
 
+.auth-panel-bottom {
+  margin-top: auto;
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--fg-3);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.auth-panel-links {
+  display: flex;
+  gap: 18px;
+}
+.auth-panel-links a {
+  color: var(--fg-2);
+  text-decoration: none;
+}
+.auth-panel-links a:hover {
+  color: var(--fg-0);
+}
+
+@media (max-width: 900px) {
+  .auth-shell {
+    grid-template-columns: 1fr;
+  }
+  .auth-panel {
+    padding: 32px 24px;
+  }
+}
 </style>
