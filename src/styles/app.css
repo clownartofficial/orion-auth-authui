@@ -1,0 +1,117 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+@theme {
+  --color-bg-0: var(--bg-0);
+  --color-bg-1: var(--bg-1);
+  --color-bg-2: var(--bg-2);
+  --color-bg-3: var(--bg-3);
+  --color-bg-inset: var(--bg-inset);
+
+  --color-fg-0: var(--fg-0);
+  --color-fg-1: var(--fg-1);
+  --color-fg-2: var(--fg-2);
+  --color-fg-3: var(--fg-3);
+
+  --color-accent: var(--accent);
+  --color-accent-hi: var(--accent-hi);
+  --color-accent-lo: var(--accent-lo);
+  --color-accent-bg: var(--accent-bg);
+  --color-accent-fg: var(--accent-fg);
+
+  --color-success: var(--success);
+  --color-success-bg: var(--success-bg);
+  --color-warn: var(--warn);
+  --color-warn-bg: var(--warn-bg);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+  --color-info: var(--info);
+  --color-info-bg: var(--info-bg);
+
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+
+  --font-sans: 'Inter', -apple-system, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-display: 'Instrument Serif', serif;
+
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 999px;
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+
+  --duration-fast: 120ms;
+  --duration-med: 220ms;
+  --duration-slow: 360ms;
+
+  --ease-smooth: cubic-bezier(0.2, 0, 0, 1);
+
+  --animate-pulse-dot: pulse-dot 2s ease-in-out infinite;
+  --animate-fade-in: fade-in 320ms cubic-bezier(0.2, 0, 0, 1);
+  --animate-twinkle: twinkle 3s ease-in-out infinite;
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+}
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg-0);
+    color: var(--fg-0);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+  }
+
+  #app { min-height: 100vh; }
+  button { font-family: inherit; }
+
+  ::selection {
+    background: var(--accent-bg);
+    color: var(--accent-fg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: var(--r-sm);
+  }
+}
+
+@layer components {
+  .p-button { font-family: var(--font-mono); font-size: 12px; font-weight: 500; border-radius: var(--r-md); }
+  .p-inputtext { font-family: var(--font-mono); font-size: 13px; border-radius: var(--r-md); padding: 10px 14px; }
+  .p-inputotp .p-inputtext { text-align: center; font-size: 18px; font-weight: 600; width: 48px; height: 48px; padding: 0; border-radius: var(--r-md); }
+  .p-card { border-radius: var(--r-lg); box-shadow: none; }
+  .p-card .p-card-body { padding: 32px; }
+  .p-message { border-radius: var(--r-md); font-family: var(--font-mono); font-size: 12px; }
+  .p-message-error, .p-message.p-message-error { background: var(--danger-bg); color: var(--danger); }
+  .p-message-success, .p-message.p-message-success { background: var(--success-bg); color: var(--success); }
+  .p-message-info, .p-message.p-message-info { background: var(--accent-bg); color: var(--accent); }
+  .p-toast .p-toast-message { border-radius: var(--r-md); font-family: var(--font-mono); font-size: 12px; }
+  .p-progress-spinner-circle { stroke: var(--accent); }
+}
