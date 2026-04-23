@@ -5,8 +5,8 @@ import { apiPost } from '../composables/useApi'
 import { useAuthState } from '../composables/useAuthState'
 import { useSettings } from '../composables/useSettings'
 import FlowStepIndicator from '../components/FlowStepIndicator.vue'
-import AuthDivider from '../components/AuthDivider.vue'
-import FederatedButtons from '../components/FederatedButtons.vue'
+// import AuthDivider from '../components/AuthDivider.vue'
+// import FederatedButtons from '../components/FederatedButtons.vue'
 
 const router = useRouter()
 const { state, updateFromLoginResponse } = useAuthState()
@@ -116,16 +116,16 @@ async function handleSubmit() {
       </button>
     </form>
 
+    <!-- TODO: Passkey sign-in (needs WebAuthn backend support)
     <button class="fed-btn fed-btn--passkey" type="button">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 0 0 8 11a4 4 0 1 1 8 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0 0 15.171 17m3.839-1.132c.11-2.243.175-4.472.175-6.868a8 8 0 1 0-16 0c0 .61.006 1.213.018 1.812M12 11c0 .61-.006 1.213-.018 1.812"/>
-      </svg>
       Se connecter avec un passkey
     </button>
+    -->
 
+    <!-- TODO: Federated login (needs federation backend)
     <AuthDivider text="ou continuer avec" />
-
     <FederatedButtons />
+    -->
 
     <div class="auth-foot" v-if="registrationEnabled !== false">
       Pas encore de compte ? <RouterLink to="/register">Créer un compte</RouterLink>

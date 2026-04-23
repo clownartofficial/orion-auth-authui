@@ -79,13 +79,17 @@ async function handleSubmit() {
       <InputOtp v-model="code" :length="6" integer-only :disabled="loading" />
     </div>
 
+    <!-- TODO: OTP countdown timer (needs backend expiry info)
     <div class="otp-timer">
       code expires in <span class="otp-timer-value">04:59</span>
     </div>
+    -->
 
+    <!-- TODO: Resend code (needs backend endpoint)
     <div class="auth-foot">
-      Vous n'avez pas reçu le code ? <a href="#" @click.prevent="() => {}">Renvoyer</a>
+      Vous n'avez pas reçu le code ? <a href="#">Renvoyer</a>
     </div>
+    -->
   </div>
 </template>
 

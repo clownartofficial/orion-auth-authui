@@ -20,11 +20,13 @@ import AuthHero from '../components/AuthHero.vue'
 
       <div class="auth-panel-bottom">
         <span>&copy; 2026 OrionAuth · v1.0.0</span>
+        <!-- TODO: Footer links (needs configured URLs)
         <div class="auth-panel-links">
           <a href="#">Privacy</a>
           <a href="#">Terms</a>
           <a href="#">Docs</a>
         </div>
+        -->
       </div>
     </div>
   </div>
