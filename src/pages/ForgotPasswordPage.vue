@@ -20,8 +20,8 @@ async function handleSubmit() {
 
 <template>
   <div class="page">
-    <h2 class="page-title">Mot de passe oublié</h2>
-    <p class="page-sub">$ auth --reset-request</p>
+    <h2 class="auth-title display">Mot de passe oublié</h2>
+    <p class="auth-sub-mono">$ auth --reset-request</p>
 
     <template v-if="submitted">
       <Message severity="info" :closable="false">
@@ -31,7 +31,7 @@ async function handleSubmit() {
     </template>
 
     <template v-else>
-      <p class="page-desc">Entrez votre email pour recevoir un lien de réinitialisation.</p>
+      <p class="auth-sub">Entrez votre email pour recevoir un lien de réinitialisation.</p>
 
       <form @submit.prevent="handleSubmit" class="form">
         <div class="field">
@@ -64,10 +64,10 @@ async function handleSubmit() {
 <style scoped>
 .page-title {
   text-align: center;
-  font-family: var(--font-sans);
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: -0.03em;
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 400;
+  letter-spacing: -0.015em;
   margin-bottom: 2px;
 }
 

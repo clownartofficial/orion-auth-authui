@@ -45,8 +45,8 @@ async function handleSubmit() {
 
 <template>
   <div class="page">
-    <h2 class="page-title">Réinitialiser le mot de passe</h2>
-    <p class="page-sub">$ auth --reset-password</p>
+    <h2 class="auth-title display">Réinitialiser le mot de passe</h2>
+    <p class="auth-sub-mono">$ auth --reset-password</p>
 
     <Message v-if="!token" severity="error" :closable="false">
       Lien de réinitialisation invalide.
@@ -101,10 +101,10 @@ async function handleSubmit() {
 <style scoped>
 .page-title {
   text-align: center;
-  font-family: var(--font-sans);
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: -0.03em;
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 400;
+  letter-spacing: -0.015em;
   margin-bottom: 2px;
 }
 

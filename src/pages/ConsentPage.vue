@@ -57,12 +57,12 @@ function handleDeny() {
 
 <template>
   <div class="page">
-    <h2 class="page-title">Autorisation requise</h2>
-    <p class="page-sub">$ auth --consent</p>
+    <h2 class="auth-title display">Autorisation requise</h2>
+    <p class="auth-sub-mono">$ auth --consent</p>
 
     <!-- Resource-based flow -->
     <template v-if="state.resource">
-      <p class="page-desc">
+      <p class="auth-sub">
         <strong>{{ state.clientName }}</strong> demande accès à
         <strong>{{ state.resource.name }}</strong>
       </p>
@@ -98,7 +98,7 @@ function handleDeny() {
 
     <!-- Standard OIDC flow (no resource) -->
     <template v-else>
-      <p class="page-desc">
+      <p class="auth-sub">
         <strong>{{ state.clientName }}</strong> souhaite accéder à votre compte.
       </p>
 
@@ -131,10 +131,10 @@ function handleDeny() {
 <style scoped>
 .page-title {
   text-align: center;
-  font-family: var(--font-sans);
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: -0.03em;
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 400;
+  letter-spacing: -0.015em;
   margin-bottom: 2px;
 }
 
@@ -198,7 +198,7 @@ function handleDeny() {
 .perm-name {
   font-family: var(--font-mono);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 400;
   color: var(--fg-0);
 }
 

@@ -32,8 +32,8 @@ onMounted(async () => {
 
 <template>
   <div class="page">
-    <h2 class="page-title">Vérification de l'email</h2>
-    <p class="page-sub">$ auth --verify-email</p>
+    <h2 class="auth-title display">Vérification de l'email</h2>
+    <p class="auth-sub-mono">$ auth --verify-email</p>
 
     <div class="content">
       <ProgressSpinner v-if="loading" />
@@ -55,10 +55,10 @@ onMounted(async () => {
 <style scoped>
 .page-title {
   text-align: center;
-  font-family: var(--font-sans);
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: -0.03em;
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 400;
+  letter-spacing: -0.015em;
   margin-bottom: 2px;
 }
 

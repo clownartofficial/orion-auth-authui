@@ -100,9 +100,9 @@ onMounted(() => {
   <div class="page">
     <!-- Step 1: Enter code -->
     <template v-if="step === 'code'">
-      <h2 class="page-title">Activation d'appareil</h2>
-      <p class="page-sub">$ auth --device</p>
-      <p class="page-desc">
+      <h2 class="auth-title display">Activation d'appareil</h2>
+      <p class="auth-sub-mono">$ auth --device</p>
+      <p class="auth-sub">
         Entrez le code affiché sur votre appareil.
       </p>
 
@@ -132,9 +132,9 @@ onMounted(() => {
 
     <!-- Step 2: Approve/Deny -->
     <template v-if="step === 'approve'">
-      <h2 class="page-title">Autoriser l'appareil</h2>
-      <p class="page-sub">$ auth --device --approve</p>
-      <p class="page-desc">
+      <h2 class="auth-title display">Autoriser l'appareil</h2>
+      <p class="auth-sub-mono">$ auth --device --approve</p>
+      <p class="auth-sub">
         <strong>{{ clientName }}</strong> souhaite accéder à votre compte.
       </p>
 
@@ -190,8 +190,8 @@ onMounted(() => {
 
     <!-- Done -->
     <template v-if="step === 'done'">
-      <h2 class="page-title">Activation d'appareil</h2>
-      <p class="page-sub">$ auth --device</p>
+      <h2 class="auth-title display">Activation d'appareil</h2>
+      <p class="auth-sub-mono">$ auth --device</p>
       <Message :severity="resultSeverity" :closable="false" class="msg">{{ resultMessage }}</Message>
     </template>
   </div>
@@ -200,10 +200,10 @@ onMounted(() => {
 <style scoped>
 .page-title {
   text-align: center;
-  font-family: var(--font-sans);
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: -0.03em;
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 400;
+  letter-spacing: -0.015em;
   margin-bottom: 2px;
 }
 
