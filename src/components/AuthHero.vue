@@ -49,10 +49,12 @@
       <p>Single sign-on, passkeys, federated identity and fine-grained access — under a single audit-grade log.</p>
     </div>
 
+    <!-- TODO: Certifications and SLA (needs real data)
     <div class="hero-foot">
       <span><span class="dot"></span>SOC 2 · ISO 27001</span>
       <span>eu-west-3 · 99.99% SLA</span>
     </div>
+    -->
   </div>
 </template>
 
