@@ -55,7 +55,7 @@ onMounted(async () => {
 <style scoped>
 .page-title {
   text-align: center;
-  font-family: var(--nh-sans);
+  font-family: var(--font-sans);
   font-size: 20px;
   font-weight: 600;
   letter-spacing: -0.03em;
@@ -64,9 +64,9 @@ onMounted(async () => {
 
 .page-sub {
   text-align: center;
-  font-family: var(--nh-mono);
+  font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--nh-muted);
+  color: var(--fg-2);
   margin-bottom: 1.5rem;
 }
 
@@ -78,14 +78,14 @@ onMounted(async () => {
 }
 
 .back-link {
-  font-family: var(--nh-mono);
+  font-family: var(--font-mono);
   font-size: 12px;
-  color: var(--nh-accent);
+  color: var(--accent);
   text-decoration: none;
   transition: color 0.15s;
 }
 
 .back-link:hover {
-  color: var(--nh-accent-hover);
+  color: var(--accent-hi);
 }
 </style>

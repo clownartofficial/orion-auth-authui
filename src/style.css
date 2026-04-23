@@ -49,11 +49,11 @@
 
 html, body {
   height: 100%;
-  font-family: var(--nh-sans);
+  font-family: var(--font-sans);
   font-size: 14px;
   line-height: 1.6;
-  color: var(--nh-text);
-  background: var(--nh-bg);
+  color: var(--fg-0);
+  background: var(--bg-0);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -66,10 +66,10 @@ html, body {
 
 /* Primary button */
 .p-button:not(.p-button-outlined):not(.p-button-text):not(.p-button-secondary) {
-  background: var(--nh-accent) !important;
-  border-color: var(--nh-accent) !important;
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
   color: #fff !important;
-  font-family: var(--nh-mono);
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.02em;
@@ -78,34 +78,34 @@ html, body {
 }
 
 .p-button:not(.p-button-outlined):not(.p-button-text):not(.p-button-secondary):hover {
-  background: var(--nh-accent-hover) !important;
-  border-color: var(--nh-accent-hover) !important;
+  background: var(--accent-hi) !important;
+  border-color: var(--accent-hi) !important;
 }
 
 /* Secondary / outlined button */
 .p-button-outlined,
 .p-button-secondary {
-  font-family: var(--nh-mono) !important;
+  font-family: var(--font-mono) !important;
   font-size: 12px !important;
   border-radius: 8px !important;
-  border-color: var(--nh-border2) !important;
-  color: var(--nh-muted) !important;
+  border-color: var(--border-strong) !important;
+  color: var(--fg-2) !important;
   background: transparent !important;
 }
 
 .p-button-outlined:hover,
 .p-button-secondary:hover {
-  background: var(--nh-bg3) !important;
-  color: var(--nh-text) !important;
-  border-color: var(--nh-border2) !important;
+  background: var(--bg-2) !important;
+  color: var(--fg-0) !important;
+  border-color: var(--border-strong) !important;
 }
 
 /* InputText & Password input */
 .p-inputtext {
-  background: var(--nh-bg) !important;
-  border: 1px solid var(--nh-border2) !important;
-  color: var(--nh-text) !important;
-  font-family: var(--nh-mono) !important;
+  background: var(--bg-0) !important;
+  border: 1px solid var(--border-strong) !important;
+  color: var(--fg-0) !important;
+  font-family: var(--font-mono) !important;
   font-size: 13px !important;
   border-radius: 8px !important;
   padding: 10px 14px !important;
@@ -113,13 +113,13 @@ html, body {
 }
 
 .p-inputtext::placeholder {
-  color: var(--nh-muted) !important;
+  color: var(--fg-2) !important;
   opacity: 0.6 !important;
 }
 
 .p-inputtext:focus,
 .p-inputtext:enabled:focus {
-  border-color: var(--nh-accent) !important;
+  border-color: var(--accent) !important;
   box-shadow: 0 0 0 2px rgba(127, 119, 221, 0.15) !important;
   outline: none !important;
 }
@@ -131,16 +131,16 @@ html, body {
 
 /* Password wrapper */
 .p-password .p-password-toggle {
-  background: var(--nh-bg) !important;
-  border: 1px solid var(--nh-border2) !important;
+  background: var(--bg-0) !important;
+  border: 1px solid var(--border-strong) !important;
   border-left: none !important;
-  color: var(--nh-muted) !important;
+  color: var(--fg-2) !important;
   border-radius: 0 8px 8px 0 !important;
 }
 
 /* InputOtp */
 .p-inputotp .p-inputtext {
-  border-right: 1px solid var(--nh-border2) !important;
+  border-right: 1px solid var(--border-strong) !important;
   border-radius: 8px !important;
   text-align: center;
   font-size: 18px !important;
@@ -152,23 +152,23 @@ html, body {
 
 /* Checkbox */
 .p-checkbox .p-checkbox-box {
-  background: var(--nh-bg) !important;
-  border-color: var(--nh-border2) !important;
+  background: var(--bg-0) !important;
+  border-color: var(--border-strong) !important;
   border-radius: 5px !important;
 }
 
 .p-checkbox .p-checkbox-box.p-highlight {
-  background: var(--nh-accent) !important;
-  border-color: var(--nh-accent) !important;
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
 }
 
 /* Card */
 .p-card {
-  background: var(--nh-bg2) !important;
-  border: 1px solid var(--nh-border) !important;
+  background: var(--bg-1) !important;
+  border: 1px solid var(--border) !important;
   border-radius: 12px !important;
   box-shadow: none !important;
-  color: var(--nh-text) !important;
+  color: var(--fg-0) !important;
 }
 
 .p-card .p-card-body {
@@ -178,7 +178,7 @@ html, body {
 /* Message */
 .p-message {
   border-radius: 8px !important;
-  font-family: var(--nh-mono) !important;
+  font-family: var(--font-mono) !important;
   font-size: 12px !important;
 }
 
@@ -186,33 +186,33 @@ html, body {
 .p-message.p-message-error {
   background: rgba(226, 75, 74, 0.1) !important;
   border-color: rgba(226, 75, 74, 0.2) !important;
-  color: var(--nh-red) !important;
+  color: var(--danger) !important;
 }
 
 .p-message-success,
 .p-message.p-message-success {
   background: rgba(93, 202, 165, 0.1) !important;
   border-color: rgba(93, 202, 165, 0.2) !important;
-  color: var(--nh-accent2) !important;
+  color: var(--success) !important;
 }
 
 .p-message-info,
 .p-message.p-message-info {
   background: rgba(127, 119, 221, 0.1) !important;
   border-color: rgba(127, 119, 221, 0.2) !important;
-  color: var(--nh-accent) !important;
+  color: var(--accent) !important;
 }
 
 /* Toast */
 .p-toast .p-toast-message {
-  background: var(--nh-bg2) !important;
-  border: 1px solid var(--nh-border) !important;
+  background: var(--bg-1) !important;
+  border: 1px solid var(--border) !important;
   border-radius: 10px !important;
-  font-family: var(--nh-mono) !important;
+  font-family: var(--font-mono) !important;
   font-size: 12px !important;
 }
 
 /* ProgressSpinner */
 .p-progress-spinner-circle {
-  stroke: var(--nh-accent) !important;
+  stroke: var(--accent) !important;
 }

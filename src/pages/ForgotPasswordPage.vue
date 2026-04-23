@@ -64,7 +64,7 @@ async function handleSubmit() {
 <style scoped>
 .page-title {
   text-align: center;
-  font-family: var(--nh-sans);
+  font-family: var(--font-sans);
   font-size: 20px;
   font-weight: 600;
   letter-spacing: -0.03em;
@@ -73,16 +73,16 @@ async function handleSubmit() {
 
 .page-sub {
   text-align: center;
-  font-family: var(--nh-mono);
+  font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--nh-muted);
+  color: var(--fg-2);
   margin-bottom: 0.5rem;
 }
 
 .page-desc {
   text-align: center;
   font-size: 13px;
-  color: var(--nh-muted);
+  color: var(--fg-2);
   margin-bottom: 1.5rem;
 }
 
@@ -99,37 +99,37 @@ async function handleSubmit() {
 }
 
 .field label {
-  font-family: var(--nh-mono);
+  font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 400;
-  color: var(--nh-muted);
+  color: var(--fg-2);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
 .links {
   text-align: center;
-  font-family: var(--nh-mono);
+  font-family: var(--font-mono);
   font-size: 12px;
 }
 
 .links a,
 .back-link {
-  color: var(--nh-accent);
+  color: var(--accent);
   text-decoration: none;
   transition: color 0.15s;
 }
 
 .links a:hover,
 .back-link:hover {
-  color: var(--nh-accent-hover);
+  color: var(--accent-hi);
 }
 
 .back-link {
   display: block;
   text-align: center;
   margin-top: 1rem;
-  font-family: var(--nh-mono);
+  font-family: var(--font-mono);
   font-size: 12px;
 }
 </style>

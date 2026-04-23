@@ -131,7 +131,7 @@ function handleDeny() {
 <style scoped>
 .page-title {
   text-align: center;
-  font-family: var(--nh-sans);
+  font-family: var(--font-sans);
   font-size: 20px;
   font-weight: 600;
   letter-spacing: -0.03em;
@@ -140,33 +140,33 @@ function handleDeny() {
 
 .page-sub {
   text-align: center;
-  font-family: var(--nh-mono);
+  font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--nh-muted);
+  color: var(--fg-2);
   margin-bottom: 0.5rem;
 }
 
 .page-desc {
   text-align: center;
   font-size: 13px;
-  color: var(--nh-muted);
+  color: var(--fg-2);
   margin-bottom: 0.25rem;
 }
 
 .resource-id {
   text-align: center;
-  font-family: var(--nh-mono);
+  font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--nh-muted);
+  color: var(--fg-2);
   margin-bottom: 1.5rem;
 }
 
 .section-label {
-  font-family: var(--nh-mono);
+  font-family: var(--font-mono);
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--nh-muted);
+  color: var(--fg-2);
   margin-bottom: 0.5rem;
 }
 
@@ -175,8 +175,8 @@ function handleDeny() {
   flex-direction: column;
   margin-bottom: 1rem;
   padding: 14px;
-  background: var(--nh-bg);
-  border: 1px solid var(--nh-border);
+  background: var(--bg-0);
+  border: 1px solid var(--border);
   border-radius: 8px;
 }
 
@@ -196,20 +196,20 @@ function handleDeny() {
 }
 
 .perm-name {
-  font-family: var(--nh-mono);
+  font-family: var(--font-mono);
   font-size: 13px;
   font-weight: 600;
-  color: var(--nh-text);
+  color: var(--fg-0);
 }
 
 .perm-desc {
   font-size: 12px;
-  color: var(--nh-muted);
+  color: var(--fg-2);
 }
 
 .scope-item {
   font-size: 13px;
-  color: var(--nh-text);
+  color: var(--fg-0);
   padding: 2px 0;
 }
 

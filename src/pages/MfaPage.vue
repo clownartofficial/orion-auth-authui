@@ -86,7 +86,7 @@ async function handleSubmit() {
 <style scoped>
 .page-title {
   text-align: center;
-  font-family: var(--nh-sans);
+  font-family: var(--font-sans);
   font-size: 20px;
   font-weight: 600;
   letter-spacing: -0.03em;
@@ -95,16 +95,16 @@ async function handleSubmit() {
 
 .page-sub {
   text-align: center;
-  font-family: var(--nh-mono);
+  font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--nh-muted);
+  color: var(--fg-2);
   margin-bottom: 0.5rem;
 }
 
 .page-desc {
   text-align: center;
   font-size: 13px;
-  color: var(--nh-muted);
+  color: var(--fg-2);
   margin-bottom: 1.5rem;
 }
 

@@ -74,14 +74,18 @@ async function handleSubmit() {
 
 <template>
   <div class="page">
-    <h2 class="page-title">Connexion</h2>
-    <p class="page-sub">$ auth --login</p>
+    <div class="auth-step">
+      <span class="auth-step-dot"></span>
+      Sign in
+    </div>
+    <h2 class="auth-title display">Connexion</h2>
+    <p class="auth-sub">Entrez vos identifiants pour continuer</p>
 
     <Message v-if="error" severity="error" :closable="false" class="msg">{{ error }}</Message>
 
     <form @submit.prevent="handleSubmit" class="form">
-      <div class="field">
-        <label for="email">Email</label>
+      <div class="auth-field">
+        <label for="email" class="auth-field-label">Email</label>
         <InputText
           id="email"
           v-model="email"
@@ -92,8 +96,11 @@ async function handleSubmit() {
         />
       </div>
 
-      <div class="field">
-        <label for="password">Mot de passe</label>
+      <div class="auth-field">
+        <div class="auth-field-label">
+          <label for="password">Mot de passe</label>
+          <RouterLink to="/forgot-password" class="auth-field-link">Mot de passe oublié ?</RouterLink>
+        </div>
         <Password
           id="password"
           v-model="password"
@@ -104,78 +111,133 @@ async function handleSubmit() {
         />
       </div>
 
-      <Button
-        type="submit"
-        label="Se connecter"
-        :loading="loading"
-        fluid
-      />
+      <button type="submit" class="auth-btn" :disabled="loading">
+        {{ loading ? 'Connexion...' : 'Se connecter' }}
+      </button>
 
-      <div class="links">
-        <RouterLink to="/forgot-password">Mot de passe oublié ?</RouterLink>
-        <RouterLink v-if="registrationEnabled !== false" to="/register">Créer un compte</RouterLink>
+      <div class="auth-foot" v-if="registrationEnabled !== false">
+        Pas encore de compte ? <RouterLink to="/register">Créer un compte</RouterLink>
       </div>
     </form>
   </div>
 </template>
 
 <style scoped>
-.page-title {
-  text-align: center;
-  font-family: var(--nh-sans);
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  margin-bottom: 2px;
+.auth-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.auth-step-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  animation: pulse-dot 2s ease-in-out infinite;
 }
 
-.page-sub {
-  text-align: center;
-  font-family: var(--nh-mono);
-  font-size: 11px;
-  color: var(--nh-muted);
-  margin-bottom: 1.5rem;
+.auth-title {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  color: var(--fg-0);
+  margin: 0 0 8px;
+  line-height: 1.15;
+}
+
+.auth-sub {
+  font-size: 13.5px;
+  color: var(--fg-2);
+  line-height: 1.55;
+  margin: 0 0 28px;
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 14px;
 }
 
-.field {
+.auth-field {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.field label {
-  font-family: var(--nh-mono);
-  font-size: 11px;
-  font-weight: 400;
-  color: var(--nh-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.links {
+.auth-field-label {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  font-family: var(--nh-mono);
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--fg-2);
 }
 
-.links a {
-  color: var(--nh-accent);
+.auth-field-link {
+  color: var(--accent);
   text-decoration: none;
-  transition: color 0.15s;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 11.5px;
+}
+.auth-field-link:hover { text-decoration: underline; }
+
+.auth-btn {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--r-md);
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  background: var(--accent);
+  color: var(--fg-0);
+  cursor: pointer;
+  transition: all var(--t-fast);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: inherit;
+  margin-top: var(--s-2);
+}
+.auth-btn:hover {
+  background: var(--accent-hi);
+  box-shadow: 0 8px 20px -8px var(--accent);
+  transform: translateY(-1px);
+}
+.auth-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
-.links a:hover {
-  color: var(--nh-accent-hover);
+.auth-foot {
+  font-size: 12.5px;
+  color: var(--fg-2);
+  text-align: center;
+  margin-top: var(--s-2);
 }
+.auth-foot a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+.auth-foot a:hover { text-decoration: underline; }
 
 .msg {
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--s-2);
 }
 </style>

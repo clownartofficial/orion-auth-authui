@@ -200,7 +200,7 @@ onMounted(() => {
 <style scoped>
 .page-title {
   text-align: center;
-  font-family: var(--nh-sans);
+  font-family: var(--font-sans);
   font-size: 20px;
   font-weight: 600;
   letter-spacing: -0.03em;
@@ -209,16 +209,16 @@ onMounted(() => {
 
 .page-sub {
   text-align: center;
-  font-family: var(--nh-mono);
+  font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--nh-muted);
+  color: var(--fg-2);
   margin-bottom: 0.5rem;
 }
 
 .page-desc {
   text-align: center;
   font-size: 13px;
-  color: var(--nh-muted);
+  color: var(--fg-2);
   margin-bottom: 1.5rem;
 }
 
@@ -235,16 +235,16 @@ onMounted(() => {
 }
 
 .field label {
-  font-family: var(--nh-mono);
+  font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 400;
-  color: var(--nh-muted);
+  color: var(--fg-2);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
 .code-input :deep(input) {
-  font-family: var(--nh-mono);
+  font-family: var(--font-mono);
   font-size: 18px;
   text-align: center;
   letter-spacing: 0.15em;
@@ -257,14 +257,14 @@ onMounted(() => {
   gap: 0.75rem;
   margin-bottom: 1.5rem;
   padding: 14px;
-  background: var(--nh-bg);
-  border: 1px solid var(--nh-border);
+  background: var(--bg-0);
+  border: 1px solid var(--border);
   border-radius: 8px;
 }
 
 .scope-item {
   font-size: 13px;
-  color: var(--nh-text);
+  color: var(--fg-0);
   padding: 2px 0;
 }
 
