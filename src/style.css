@@ -1,218 +1,76 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-:root {
-  /* NHPro Dark Theme (default) */
-  --nh-bg: #0a0a0b;
-  --nh-bg2: #111113;
-  --nh-bg3: #18181b;
-  --nh-border: rgba(255, 255, 255, 0.07);
-  --nh-border2: rgba(255, 255, 255, 0.12);
-  --nh-text: #e8e8e8;
-  --nh-muted: #6b6b78;
-  --nh-accent: #7f77dd;
-  --nh-accent-hover: #6a63c8;
-  --nh-accent-bg: rgba(127, 119, 221, 0.07);
-  --nh-accent2: #5dcaa5;
-  --nh-accent3: #ef9f27;
-  --nh-red: #e24b4a;
-  --nh-mono: 'JetBrains Mono', monospace;
-  --nh-sans: 'Syne', sans-serif;
-
-  color-scheme: dark;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    --nh-bg: #f5f5f6;
-    --nh-bg2: #ffffff;
-    --nh-bg3: #eaeaec;
-    --nh-border: rgba(0, 0, 0, 0.08);
-    --nh-border2: rgba(0, 0, 0, 0.14);
-    --nh-text: #111113;
-    --nh-muted: #6b6b78;
-    --nh-accent: #6a63c8;
-    --nh-accent-hover: #5a54b5;
-    --nh-accent-bg: rgba(106, 99, 200, 0.08);
-    --nh-accent2: #3aac85;
-    --nh-accent3: #d48a1a;
-    --nh-red: #d43b3a;
-
-    color-scheme: light;
-  }
-}
-
-html, body {
-  height: 100%;
-  font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 1.6;
-  color: var(--fg-0);
-  background: var(--bg-0);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-#app {
-  height: 100%;
-}
-
-/* ── PrimeVue overrides ── */
+/* OrionAuth Auth UI — PrimeVue overrides (supplement to primevue-preset.ts) */
 
 /* Primary button */
-.p-button:not(.p-button-outlined):not(.p-button-text):not(.p-button-secondary) {
-  background: var(--accent) !important;
-  border-color: var(--accent) !important;
-  color: #fff !important;
+.p-button {
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.02em;
-  border-radius: 8px;
-  padding: 10px 20px;
-}
-
-.p-button:not(.p-button-outlined):not(.p-button-text):not(.p-button-secondary):hover {
-  background: var(--accent-hi) !important;
-  border-color: var(--accent-hi) !important;
-}
-
-/* Secondary / outlined button */
-.p-button-outlined,
-.p-button-secondary {
-  font-family: var(--font-mono) !important;
-  font-size: 12px !important;
-  border-radius: 8px !important;
-  border-color: var(--border-strong) !important;
-  color: var(--fg-2) !important;
-  background: transparent !important;
-}
-
-.p-button-outlined:hover,
-.p-button-secondary:hover {
-  background: var(--bg-2) !important;
-  color: var(--fg-0) !important;
-  border-color: var(--border-strong) !important;
+  border-radius: var(--r-md);
 }
 
 /* InputText & Password input */
 .p-inputtext {
-  background: var(--bg-0) !important;
-  border: 1px solid var(--border-strong) !important;
-  color: var(--fg-0) !important;
-  font-family: var(--font-mono) !important;
-  font-size: 13px !important;
-  border-radius: 8px !important;
-  padding: 10px 14px !important;
-  transition: border-color 0.15s !important;
-}
-
-.p-inputtext::placeholder {
-  color: var(--fg-2) !important;
-  opacity: 0.6 !important;
-}
-
-.p-inputtext:focus,
-.p-inputtext:enabled:focus {
-  border-color: var(--accent) !important;
-  box-shadow: 0 0 0 2px rgba(127, 119, 221, 0.15) !important;
-  outline: none !important;
-}
-
-.p-inputtext:disabled {
-  opacity: 0.5 !important;
-  cursor: not-allowed !important;
-}
-
-/* Password wrapper */
-.p-password .p-password-toggle {
-  background: var(--bg-0) !important;
-  border: 1px solid var(--border-strong) !important;
-  border-left: none !important;
-  color: var(--fg-2) !important;
-  border-radius: 0 8px 8px 0 !important;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  border-radius: var(--r-md);
+  padding: 10px 14px;
 }
 
 /* InputOtp */
 .p-inputotp .p-inputtext {
-  border-right: 1px solid var(--border-strong) !important;
-  border-radius: 8px !important;
   text-align: center;
-  font-size: 18px !important;
+  font-size: 18px;
   font-weight: 600;
-  width: 48px !important;
-  height: 48px !important;
-  padding: 0 !important;
-}
-
-/* Checkbox */
-.p-checkbox .p-checkbox-box {
-  background: var(--bg-0) !important;
-  border-color: var(--border-strong) !important;
-  border-radius: 5px !important;
-}
-
-.p-checkbox .p-checkbox-box.p-highlight {
-  background: var(--accent) !important;
-  border-color: var(--accent) !important;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border-radius: var(--r-md);
 }
 
 /* Card */
 .p-card {
-  background: var(--bg-1) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: 12px !important;
-  box-shadow: none !important;
-  color: var(--fg-0) !important;
+  border-radius: var(--r-lg);
+  box-shadow: none;
 }
 
 .p-card .p-card-body {
-  padding: 32px !important;
+  padding: 32px;
 }
 
 /* Message */
 .p-message {
-  border-radius: 8px !important;
-  font-family: var(--font-mono) !important;
-  font-size: 12px !important;
+  border-radius: var(--r-md);
+  font-family: var(--font-mono);
+  font-size: 12px;
 }
 
 .p-message-error,
 .p-message.p-message-error {
-  background: rgba(226, 75, 74, 0.1) !important;
-  border-color: rgba(226, 75, 74, 0.2) !important;
-  color: var(--danger) !important;
+  background: var(--danger-bg);
+  color: var(--danger);
 }
 
 .p-message-success,
 .p-message.p-message-success {
-  background: rgba(93, 202, 165, 0.1) !important;
-  border-color: rgba(93, 202, 165, 0.2) !important;
-  color: var(--success) !important;
+  background: var(--success-bg);
+  color: var(--success);
 }
 
 .p-message-info,
 .p-message.p-message-info {
-  background: rgba(127, 119, 221, 0.1) !important;
-  border-color: rgba(127, 119, 221, 0.2) !important;
-  color: var(--accent) !important;
+  background: var(--accent-bg);
+  color: var(--accent);
 }
 
 /* Toast */
 .p-toast .p-toast-message {
-  background: var(--bg-1) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: 10px !important;
-  font-family: var(--font-mono) !important;
-  font-size: 12px !important;
+  border-radius: var(--r-md);
+  font-family: var(--font-mono);
+  font-size: 12px;
 }
 
 /* ProgressSpinner */
 .p-progress-spinner-circle {
-  stroke: var(--accent) !important;
+  stroke: var(--accent);
 }
