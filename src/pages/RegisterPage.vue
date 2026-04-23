@@ -89,9 +89,9 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <div class="page">
-    <h2 class="auth-title display">Créer un compte</h2>
-    <p class="auth-sub-mono">$ auth --register{{ isInvite ? ' --invite' : '' }}</p>
+  <div>
+    <h2 class="font-display text-[32px] font-normal tracking-[-0.015em] text-fg-0 mb-0.5">Créer un compte</h2>
+    <p class="font-mono text-[11px] text-fg-2 mb-6">$ auth --register{{ isInvite ? ' --invite' : '' }}</p>
 
     <template v-if="success">
       <Message severity="success" :closable="false">
@@ -102,17 +102,17 @@ async function handleSubmit() {
           Compte créé avec succès. Vérifiez votre email pour activer votre compte.
         </template>
       </Message>
-      <RouterLink to="/login" class="back-link">
+      <RouterLink to="/login" class="mt-4 block text-center font-mono text-xs text-accent no-underline transition-colors duration-fast hover:text-accent-hi">
         {{ isInvite ? 'Se connecter' : 'Retour à la connexion' }}
       </RouterLink>
     </template>
 
     <template v-else>
-      <Message v-if="error" severity="error" :closable="false" class="msg">{{ error }}</Message>
+      <Message v-if="error" severity="error" :closable="false" class="mb-2">{{ error }}</Message>
 
-      <form @submit.prevent="handleSubmit" class="form">
-        <div class="field">
-          <label for="displayName">Nom d'affichage</label>
+      <form @submit.prevent="handleSubmit" class="flex flex-col gap-4">
+        <div class="flex flex-col gap-1.5">
+          <label for="displayName" class="font-mono text-[11px] uppercase tracking-[0.08em] text-fg-2">Nom d'affichage</label>
           <InputText
             id="displayName"
             v-model="displayName"
@@ -121,8 +121,8 @@ async function handleSubmit() {
           />
         </div>
 
-        <div class="field">
-          <label for="email">Email</label>
+        <div class="flex flex-col gap-1.5">
+          <label for="email" class="font-mono text-[11px] uppercase tracking-[0.08em] text-fg-2">Email</label>
           <InputText
             id="email"
             v-model="email"
@@ -134,8 +134,8 @@ async function handleSubmit() {
           />
         </div>
 
-        <div class="field">
-          <label for="password">Mot de passe</label>
+        <div class="flex flex-col gap-1.5">
+          <label for="password" class="font-mono text-[11px] uppercase tracking-[0.08em] text-fg-2">Mot de passe</label>
           <Password
             id="password"
             v-model="password"
@@ -146,8 +146,8 @@ async function handleSubmit() {
           />
         </div>
 
-        <div class="field">
-          <label for="confirmPassword">Confirmer le mot de passe</label>
+        <div class="flex flex-col gap-1.5">
+          <label for="confirmPassword" class="font-mono text-[11px] uppercase tracking-[0.08em] text-fg-2">Confirmer le mot de passe</label>
           <Password
             id="confirmPassword"
             v-model="confirmPassword"
@@ -165,80 +165,10 @@ async function handleSubmit() {
           fluid
         />
 
-        <div class="links">
-          <RouterLink to="/login">Déjà un compte ? Se connecter</RouterLink>
+        <div class="text-center font-mono text-xs">
+          <RouterLink to="/login" class="text-accent no-underline transition-colors duration-fast hover:text-accent-hi">Déjà un compte ? Se connecter</RouterLink>
         </div>
       </form>
     </template>
   </div>
 </template>
-
-<style scoped>
-.page-title {
-  text-align: center;
-  font-family: var(--font-display);
-  font-size: 32px;
-  font-weight: 400;
-  letter-spacing: -0.015em;
-  margin-bottom: 2px;
-}
-
-.page-sub {
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--fg-2);
-  margin-bottom: 1.5rem;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.field label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 400;
-  color: var(--fg-2);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.links {
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 12px;
-}
-
-.links a,
-.back-link {
-  color: var(--accent);
-  text-decoration: none;
-  transition: color 0.15s;
-}
-
-.links a:hover,
-.back-link:hover {
-  color: var(--accent-hi);
-}
-
-.back-link {
-  display: block;
-  text-align: center;
-  margin-top: 1rem;
-  font-family: var(--font-mono);
-  font-size: 12px;
-}
-
-.msg {
-  margin-bottom: 0.5rem;
-}
-</style>

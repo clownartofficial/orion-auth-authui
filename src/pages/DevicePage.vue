@@ -97,20 +97,20 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="page">
+  <div>
     <!-- Step 1: Enter code -->
     <template v-if="step === 'code'">
-      <h2 class="auth-title display">Activation d'appareil</h2>
-      <p class="auth-sub-mono">$ auth --device</p>
-      <p class="auth-sub">
+      <h2 class="font-display text-[32px] font-normal tracking-[-0.015em] text-fg-0 mb-0.5">Activation d'appareil</h2>
+      <p class="font-mono text-[11px] text-fg-2 mb-2">$ auth --device</p>
+      <p class="text-[13px] text-fg-2 mb-6">
         Entrez le code affiché sur votre appareil.
       </p>
 
-      <Message v-if="error" severity="error" :closable="false" class="msg">{{ error }}</Message>
+      <Message v-if="error" severity="error" :closable="false" class="mb-2">{{ error }}</Message>
 
-      <form @submit.prevent="handleVerify" class="form">
-        <div class="field">
-          <label for="user-code">Code</label>
+      <form @submit.prevent="handleVerify" class="flex flex-col gap-4">
+        <div class="flex flex-col gap-1.5">
+          <label for="user-code" class="font-mono text-[11px] uppercase tracking-[0.08em] text-fg-2">Code</label>
           <InputText
             id="user-code"
             v-model="userCode"
@@ -132,23 +132,23 @@ onMounted(() => {
 
     <!-- Step 2: Approve/Deny -->
     <template v-if="step === 'approve'">
-      <h2 class="auth-title display">Autoriser l'appareil</h2>
-      <p class="auth-sub-mono">$ auth --device --approve</p>
-      <p class="auth-sub">
+      <h2 class="font-display text-[32px] font-normal tracking-[-0.015em] text-fg-0 mb-0.5">Autoriser l'appareil</h2>
+      <p class="font-mono text-[11px] text-fg-2 mb-2">$ auth --device --approve</p>
+      <p class="text-[13px] text-fg-2 mb-1">
         <strong>{{ clientName }}</strong> souhaite accéder à votre compte.
       </p>
 
-      <Message v-if="error" severity="error" :closable="false" class="msg">{{ error }}</Message>
+      <Message v-if="error" severity="error" :closable="false" class="mb-2">{{ error }}</Message>
 
-      <ul class="scopes">
-        <li v-for="scope in scopes" :key="scope" class="scope-item">
+      <ul class="mb-6 flex flex-col gap-3 rounded-lg border border-border bg-bg-0 p-3.5 list-none m-0">
+        <li v-for="scope in scopes" :key="scope" class="py-0.5 text-[13px] text-fg-0">
           {{ scopeDescriptions[scope] || scope }}
         </li>
       </ul>
 
-      <form @submit.prevent="handleApprove(true)" class="form">
-        <div class="field">
-          <label for="email">Email</label>
+      <form @submit.prevent="handleApprove(true)" class="flex flex-col gap-4">
+        <div class="flex flex-col gap-1.5">
+          <label for="email" class="font-mono text-[11px] uppercase tracking-[0.08em] text-fg-2">Email</label>
           <InputText
             id="email"
             v-model="email"
@@ -159,8 +159,8 @@ onMounted(() => {
           />
         </div>
 
-        <div class="field">
-          <label for="password">Mot de passe</label>
+        <div class="flex flex-col gap-1.5">
+          <label for="password" class="font-mono text-[11px] uppercase tracking-[0.08em] text-fg-2">Mot de passe</label>
           <Password
             id="password"
             v-model="password"
@@ -171,7 +171,7 @@ onMounted(() => {
           />
         </div>
 
-        <div class="actions">
+        <div class="flex justify-end gap-3">
           <Button
             label="Refuser"
             severity="secondary"
@@ -190,91 +190,19 @@ onMounted(() => {
 
     <!-- Done -->
     <template v-if="step === 'done'">
-      <h2 class="auth-title display">Activation d'appareil</h2>
-      <p class="auth-sub-mono">$ auth --device</p>
-      <Message :severity="resultSeverity" :closable="false" class="msg">{{ resultMessage }}</Message>
+      <h2 class="font-display text-[32px] font-normal tracking-[-0.015em] text-fg-0 mb-0.5">Activation d'appareil</h2>
+      <p class="font-mono text-[11px] text-fg-2 mb-2">$ auth --device</p>
+      <Message :severity="resultSeverity" :closable="false" class="mb-2">{{ resultMessage }}</Message>
     </template>
   </div>
 </template>
 
 <style scoped>
-.page-title {
-  text-align: center;
-  font-family: var(--font-display);
-  font-size: 32px;
-  font-weight: 400;
-  letter-spacing: -0.015em;
-  margin-bottom: 2px;
-}
-
-.page-sub {
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--fg-2);
-  margin-bottom: 0.5rem;
-}
-
-.page-desc {
-  text-align: center;
-  font-size: 13px;
-  color: var(--fg-2);
-  margin-bottom: 1.5rem;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.field label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 400;
-  color: var(--fg-2);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
 .code-input :deep(input) {
   font-family: var(--font-mono);
   font-size: 18px;
   text-align: center;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-}
-
-.scopes {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-  padding: 14px;
-  background: var(--bg-0);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-}
-
-.scope-item {
-  font-size: 13px;
-  color: var(--fg-0);
-  padding: 2px 0;
-}
-
-.actions {
-  display: flex;
-  gap: 0.75rem;
-  justify-content: flex-end;
-}
-
-.msg {
-  margin-bottom: 0.5rem;
 }
 </style>

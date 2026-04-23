@@ -56,39 +56,39 @@ function handleDeny() {
 </script>
 
 <template>
-  <div class="page">
-    <h2 class="auth-title display">Autorisation requise</h2>
-    <p class="auth-sub-mono">$ auth --consent</p>
+  <div>
+    <h2 class="font-display text-[32px] font-normal tracking-[-0.015em] text-fg-0 mb-0.5">Autorisation requise</h2>
+    <p class="font-mono text-[11px] text-fg-2 mb-2">$ auth --consent</p>
 
     <!-- Resource-based flow -->
     <template v-if="state.resource">
-      <p class="auth-sub">
+      <p class="text-[13px] text-fg-2 mb-1">
         <strong>{{ state.clientName }}</strong> demande accès à
         <strong>{{ state.resource.name }}</strong>
       </p>
-      <p class="resource-id">{{ state.resource.identifier }}</p>
+      <p class="font-mono text-[11px] text-fg-2 mb-6">{{ state.resource.identifier }}</p>
 
-      <div class="scopes">
-        <div class="section-label">Permissions demandées</div>
-        <ul class="permission-list">
+      <div class="mb-4 flex flex-col rounded-lg border border-border bg-bg-0 p-3.5">
+        <div class="mb-2 font-mono text-[10px] uppercase tracking-[0.06em] text-fg-2">Permissions demandées</div>
+        <ul class="m-0 flex list-none flex-col gap-2 p-0">
           <li
             v-for="perm in state.resource.permissions"
             :key="perm.name"
-            class="permission-item"
+            class="flex flex-col gap-0.5"
           >
-            <span class="perm-name">{{ perm.name }}</span>
-            <span v-if="perm.description" class="perm-desc">{{ perm.description }}</span>
+            <span class="font-mono text-[13px] text-fg-0">{{ perm.name }}</span>
+            <span v-if="perm.description" class="text-xs text-fg-2">{{ perm.description }}</span>
           </li>
         </ul>
       </div>
 
-      <div v-if="oidcRequestedScopes.length > 0" class="scopes">
-        <div class="section-label">Informations personnelles</div>
-        <ul class="permission-list">
+      <div v-if="oidcRequestedScopes.length > 0" class="mb-4 flex flex-col rounded-lg border border-border bg-bg-0 p-3.5">
+        <div class="mb-2 font-mono text-[10px] uppercase tracking-[0.06em] text-fg-2">Informations personnelles</div>
+        <ul class="m-0 flex list-none flex-col gap-2 p-0">
           <li
             v-for="scope in oidcRequestedScopes"
             :key="scope"
-            class="scope-item"
+            class="py-0.5 text-[13px] text-fg-0"
           >
             {{ scopeDescriptions[scope] || scope }}
           </li>
@@ -98,20 +98,20 @@ function handleDeny() {
 
     <!-- Standard OIDC flow (no resource) -->
     <template v-else>
-      <p class="auth-sub">
+      <p class="text-[13px] text-fg-2 mb-1">
         <strong>{{ state.clientName }}</strong> souhaite accéder à votre compte.
       </p>
 
-      <ul class="scopes">
-        <li v-for="scope in uniqueScopes" :key="scope" class="scope-item">
+      <ul class="mb-4 flex flex-col rounded-lg border border-border bg-bg-0 p-3.5">
+        <li v-for="scope in uniqueScopes" :key="scope" class="py-0.5 text-[13px] text-fg-0">
           {{ scopeDescriptions[scope] || scope }}
         </li>
       </ul>
     </template>
 
-    <Message v-if="error" severity="error" :closable="false" class="msg">{{ error }}</Message>
+    <Message v-if="error" severity="error" :closable="false" class="mb-2">{{ error }}</Message>
 
-    <div class="actions">
+    <div class="flex justify-end gap-3">
       <Button
         label="Refuser"
         severity="secondary"
@@ -127,99 +127,3 @@ function handleDeny() {
     </div>
   </div>
 </template>
-
-<style scoped>
-.page-title {
-  text-align: center;
-  font-family: var(--font-display);
-  font-size: 32px;
-  font-weight: 400;
-  letter-spacing: -0.015em;
-  margin-bottom: 2px;
-}
-
-.page-sub {
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--fg-2);
-  margin-bottom: 0.5rem;
-}
-
-.page-desc {
-  text-align: center;
-  font-size: 13px;
-  color: var(--fg-2);
-  margin-bottom: 0.25rem;
-}
-
-.resource-id {
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--fg-2);
-  margin-bottom: 1.5rem;
-}
-
-.section-label {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--fg-2);
-  margin-bottom: 0.5rem;
-}
-
-.scopes {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
-  padding: 14px;
-  background: var(--bg-0);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-}
-
-.permission-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.permission-item {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.perm-name {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 400;
-  color: var(--fg-0);
-}
-
-.perm-desc {
-  font-size: 12px;
-  color: var(--fg-2);
-}
-
-.scope-item {
-  font-size: 13px;
-  color: var(--fg-0);
-  padding: 2px 0;
-}
-
-.actions {
-  display: flex;
-  gap: 0.75rem;
-  justify-content: flex-end;
-}
-
-.msg {
-  margin-bottom: 0.5rem;
-}
-</style>

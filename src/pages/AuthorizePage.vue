@@ -58,20 +58,10 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="page">
-    <div class="content">
+  <div>
+    <div class="flex flex-col items-center gap-4 py-8">
       <ProgressSpinner v-if="loading && !error" />
       <Message v-if="error" severity="error" :closable="false">{{ error }}</Message>
     </div>
   </div>
 </template>
-
-<style scoped>
-.content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  padding: 2rem 0;
-}
-</style>

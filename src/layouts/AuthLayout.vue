@@ -3,120 +3,31 @@ import AuthHero from '../components/AuthHero.vue'
 </script>
 
 <template>
-  <div class="auth-shell">
+  <div class="grid min-h-screen grid-cols-1 overflow-hidden bg-bg-0 md:grid-cols-[1fr_520px]">
     <AuthHero />
 
-    <div class="auth-panel">
-      <div class="auth-panel-top">
-        <div class="tenant-badge">
-          <span class="tenant-dot"></span>
-        signing in to <strong>OrionAuth</strong>
+    <div class="flex min-h-screen flex-col bg-bg-0 px-6 py-8 md:px-14 md:pb-10 md:pt-14">
+      <div class="mb-auto flex items-center justify-between">
+        <div class="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-bg-inset px-2.5 py-[5px] font-mono text-[11px] text-fg-2">
+          <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>
+          signing in to <strong class="font-medium text-fg-0">OrionAuth</strong>
         </div>
       </div>
 
-      <div class="auth-card">
+      <div class="mx-auto my-10 w-full max-w-[400px] animate-fade-in">
         <slot />
       </div>
 
-      <div class="auth-panel-bottom">
+      <div class="mt-auto flex items-center justify-between border-t border-border-subtle pt-6 font-mono text-[11px] text-fg-3">
         <span>&copy; 2026 OrionAuth · v1.0.0</span>
         <!-- TODO: Footer links (needs configured URLs)
-        <div class="auth-panel-links">
-          <a href="#">Privacy</a>
-          <a href="#">Terms</a>
-          <a href="#">Docs</a>
+        <div class="flex gap-[18px]">
+          <a href="#" class="text-fg-2 no-underline hover:text-fg-0">Privacy</a>
+          <a href="#" class="text-fg-2 no-underline hover:text-fg-0">Terms</a>
+          <a href="#" class="text-fg-2 no-underline hover:text-fg-0">Docs</a>
         </div>
         -->
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.auth-shell {
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr 520px;
-  background: var(--bg-0);
-  position: relative;
-  overflow: hidden;
-}
-
-.auth-panel {
-  padding: 56px 56px 40px;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: var(--bg-0);
-}
-
-.auth-panel-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: auto;
-}
-
-.tenant-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 5px 10px;
-  border-radius: var(--r-full);
-  background: var(--bg-inset);
-  border: 1px solid var(--border-subtle);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--fg-2);
-}
-.tenant-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-}
-.tenant-badge strong {
-  color: var(--fg-0);
-  font-weight: 500;
-}
-
-.auth-card {
-  width: 100%;
-  max-width: 400px;
-  margin: 40px auto;
-  animation: fade-in 320ms cubic-bezier(0.2, 0, 0, 1);
-}
-
-.auth-panel-bottom {
-  margin-top: auto;
-  padding-top: 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--fg-3);
-  border-top: 1px solid var(--border-subtle);
-}
-
-.auth-panel-links {
-  display: flex;
-  gap: 18px;
-}
-.auth-panel-links a {
-  color: var(--fg-2);
-  text-decoration: none;
-}
-.auth-panel-links a:hover {
-  color: var(--fg-0);
-}
-
-@media (max-width: 900px) {
-  .auth-shell {
-    grid-template-columns: 1fr;
-  }
-  .auth-panel {
-    padding: 32px 24px;
-  }
-}
-</style>

@@ -19,23 +19,23 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <div class="page">
-    <h2 class="auth-title display">Mot de passe oublié</h2>
-    <p class="auth-sub-mono">$ auth --reset-request</p>
+  <div>
+    <h2 class="font-display text-[32px] font-normal tracking-[-0.015em] text-fg-0 mb-0.5">Mot de passe oublié</h2>
+    <p class="font-mono text-[11px] text-fg-2 mb-2">$ auth --reset-request</p>
 
     <template v-if="submitted">
       <Message severity="info" :closable="false">
         Si un compte existe avec cet email, vous recevrez un lien de réinitialisation.
       </Message>
-      <RouterLink to="/login" class="back-link">Retour à la connexion</RouterLink>
+      <RouterLink to="/login" class="mt-4 block text-center font-mono text-xs text-accent no-underline transition-colors duration-fast hover:text-accent-hi">Retour à la connexion</RouterLink>
     </template>
 
     <template v-else>
-      <p class="auth-sub">Entrez votre email pour recevoir un lien de réinitialisation.</p>
+      <p class="text-[13px] text-fg-2 mb-6">Entrez votre email pour recevoir un lien de réinitialisation.</p>
 
-      <form @submit.prevent="handleSubmit" class="form">
-        <div class="field">
-          <label for="email">Email</label>
+      <form @submit.prevent="handleSubmit" class="flex flex-col gap-4">
+        <div class="flex flex-col gap-1.5">
+          <label for="email" class="font-mono text-[11px] uppercase tracking-[0.08em] text-fg-2">Email</label>
           <InputText
             id="email"
             v-model="email"
@@ -53,83 +53,10 @@ async function handleSubmit() {
           fluid
         />
 
-        <div class="links">
-          <RouterLink to="/login">Retour à la connexion</RouterLink>
+        <div class="text-center font-mono text-xs">
+          <RouterLink to="/login" class="text-accent no-underline transition-colors duration-fast hover:text-accent-hi">Retour à la connexion</RouterLink>
         </div>
       </form>
     </template>
   </div>
 </template>
-
-<style scoped>
-.page-title {
-  text-align: center;
-  font-family: var(--font-display);
-  font-size: 32px;
-  font-weight: 400;
-  letter-spacing: -0.015em;
-  margin-bottom: 2px;
-}
-
-.page-sub {
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--fg-2);
-  margin-bottom: 0.5rem;
-}
-
-.page-desc {
-  text-align: center;
-  font-size: 13px;
-  color: var(--fg-2);
-  margin-bottom: 1.5rem;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.field label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 400;
-  color: var(--fg-2);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.links {
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 12px;
-}
-
-.links a,
-.back-link {
-  color: var(--accent);
-  text-decoration: none;
-  transition: color 0.15s;
-}
-
-.links a:hover,
-.back-link:hover {
-  color: var(--accent-hi);
-}
-
-.back-link {
-  display: block;
-  text-align: center;
-  margin-top: 1rem;
-  font-family: var(--font-mono);
-  font-size: 12px;
-}
-</style>

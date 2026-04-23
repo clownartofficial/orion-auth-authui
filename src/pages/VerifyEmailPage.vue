@@ -31,18 +31,18 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="page">
-    <h2 class="auth-title display">Vérification de l'email</h2>
-    <p class="auth-sub-mono">$ auth --verify-email</p>
+  <div>
+    <h2 class="font-display text-[32px] font-normal tracking-[-0.015em] text-fg-0 mb-0.5">Vérification de l'email</h2>
+    <p class="font-mono text-[11px] text-fg-2 mb-6">$ auth --verify-email</p>
 
-    <div class="content">
+    <div class="flex flex-col items-center gap-4">
       <ProgressSpinner v-if="loading" />
 
       <template v-if="success">
         <Message severity="success" :closable="false">
           Votre email a été vérifié avec succès.
         </Message>
-        <RouterLink to="/login" class="back-link">Se connecter</RouterLink>
+        <RouterLink to="/login" class="font-mono text-xs text-accent no-underline transition-colors duration-fast hover:text-accent-hi">Se connecter</RouterLink>
       </template>
 
       <template v-if="error">
@@ -51,41 +51,3 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-
-<style scoped>
-.page-title {
-  text-align: center;
-  font-family: var(--font-display);
-  font-size: 32px;
-  font-weight: 400;
-  letter-spacing: -0.015em;
-  margin-bottom: 2px;
-}
-
-.page-sub {
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--fg-2);
-  margin-bottom: 1.5rem;
-}
-
-.content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-}
-
-.back-link {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--accent);
-  text-decoration: none;
-  transition: color 0.15s;
-}
-
-.back-link:hover {
-  color: var(--accent-hi);
-}
-</style>

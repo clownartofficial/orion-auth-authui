@@ -1,17 +1,17 @@
 <template>
-  <div class="auth-hero">
+  <div class="auth-hero relative flex flex-col justify-between overflow-hidden border-r border-border-subtle p-10 md:p-12">
     <div class="grid-overlay" aria-hidden="true"></div>
 
     <!-- Orion constellation (10 stars, 7 connections) -->
-    <svg class="constellation" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+    <svg class="constellation absolute inset-0 z-[1] h-full w-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
       <!-- Connections -->
-      <line x1="20" y1="18" x2="32" y2="48" /><!-- Bellatrix→Alnitak -->
-      <line x1="36" y1="22" x2="28" y2="52" /><!-- Betelgeuse→Alnilam -->
-      <line x1="32" y1="48" x2="28" y2="52" /><!-- Alnitak→Alnilam -->
-      <line x1="28" y1="52" x2="24" y2="56" /><!-- Alnilam→Mintaka -->
-      <line x1="24" y1="56" x2="18" y2="78" /><!-- Mintaka→Rigel -->
-      <line x1="28" y1="52" x2="40" y2="78" /><!-- Alnilam→Saiph -->
-      <line x1="20" y1="18" x2="36" y2="22" /><!-- Bellatrix→Betelgeuse -->
+      <line x1="20" y1="18" x2="32" y2="48" /><!-- Bellatrix->Alnitak -->
+      <line x1="36" y1="22" x2="28" y2="52" /><!-- Betelgeuse->Alnilam -->
+      <line x1="32" y1="48" x2="28" y2="52" /><!-- Alnitak->Alnilam -->
+      <line x1="28" y1="52" x2="24" y2="56" /><!-- Alnilam->Mintaka -->
+      <line x1="24" y1="56" x2="18" y2="78" /><!-- Mintaka->Rigel -->
+      <line x1="28" y1="52" x2="40" y2="78" /><!-- Alnilam->Saiph -->
+      <line x1="20" y1="18" x2="36" y2="22" /><!-- Bellatrix->Betelgeuse -->
       <!-- Stars -->
       <circle cx="20" cy="18" r="0.7" style="animation: twinkle 2s ease-in-out 0s infinite" />
       <circle cx="36" cy="22" r="0.83" style="animation: twinkle 3s ease-in-out 0.3s infinite" />
@@ -25,9 +25,9 @@
       <circle cx="60" cy="65" r="0.47" style="animation: twinkle 2s ease-in-out 2.7s infinite" />
     </svg>
 
-    <div class="hero-brand">
-      <div class="brand-mark" aria-hidden="true">
-        <svg viewBox="0 0 28 28" width="28" height="28">
+    <div class="relative z-[2] flex items-center gap-2.5">
+      <div class="brand-mark relative h-7 w-7 shrink-0 overflow-hidden rounded-md border border-border text-accent">
+        <svg viewBox="0 0 28 28" width="28" height="28" class="absolute inset-0">
           <g fill="currentColor">
             <circle cx="8" cy="9" r="1.4" opacity="0.85"/>
             <circle cx="14" cy="14" r="1.8"/>
@@ -41,17 +41,17 @@
           </g>
         </svg>
       </div>
-      <div class="brand-wordmark">orion<em>auth</em></div>
+      <div class="font-display text-[19px] font-normal tracking-[-0.01em] text-fg-0">orion<em class="not-italic text-accent">auth</em></div>
     </div>
 
-    <div class="hero-quote">
-      <h2>Identity,<br/>built for <em>engineers</em>.</h2>
-      <p>Single sign-on, passkeys, federated identity and fine-grained access — under a single audit-grade log.</p>
+    <div class="relative z-[2] max-w-[420px]">
+      <h2 class="mb-4 font-display text-[42px] font-normal leading-[1.1] tracking-[-0.02em] text-fg-0">Identity,<br/>built for <em class="not-italic text-accent">engineers</em>.</h2>
+      <p class="text-sm leading-[1.6] text-fg-2">Single sign-on, passkeys, federated identity and fine-grained access — under a single audit-grade log.</p>
     </div>
 
     <!-- TODO: Certifications and SLA (needs real data)
-    <div class="hero-foot">
-      <span><span class="dot"></span>SOC 2 · ISO 27001</span>
+    <div class="relative z-[2] flex gap-[18px] font-mono text-[11px] text-fg-3">
+      <span class="inline-flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-success shadow-[0_0_8px_var(--success)]"></span>SOC 2 · ISO 27001</span>
       <span>eu-west-3 · 99.99% SLA</span>
     </div>
     -->
@@ -60,17 +60,10 @@
 
 <style scoped>
 .auth-hero {
-  position: relative;
-  padding: 40px 48px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   background:
     radial-gradient(ellipse 900px 600px at 20% 30%, var(--accent-bg), transparent 60%),
     radial-gradient(ellipse 700px 500px at 80% 80%, var(--accent-bg), transparent 70%),
     var(--bg-1);
-  border-right: 1px solid var(--border-subtle);
-  overflow: hidden;
 }
 
 .grid-overlay {
@@ -86,91 +79,13 @@
   pointer-events: none;
 }
 
-.constellation {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-}
 .constellation circle { fill: var(--accent); }
 .constellation line { stroke: var(--accent); stroke-width: 0.6; opacity: 0.35; }
 
-.hero-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  position: relative;
-  z-index: 2;
-}
-
 .brand-mark {
-  width: 28px;
-  height: 28px;
-  border-radius: var(--r-md);
   background:
     radial-gradient(circle at 30% 30%, var(--accent) 0%, transparent 45%),
     radial-gradient(circle at 70% 70%, var(--accent-lo) 0%, transparent 50%),
     var(--bg-inset);
-  border: 1px solid var(--border);
-  position: relative;
-  overflow: hidden;
-  flex-shrink: 0;
-  color: var(--accent);
-}
-.brand-mark svg { position: absolute; inset: 0; }
-
-.brand-wordmark {
-  font-family: var(--font-display);
-  font-size: 19px;
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  color: var(--fg-0);
-}
-.brand-wordmark em { color: var(--accent); font-style: normal; }
-
-.hero-quote {
-  position: relative;
-  z-index: 2;
-  max-width: 420px;
-}
-.hero-quote h2 {
-  font-family: var(--font-display);
-  font-size: 42px;
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-  margin: 0 0 16px;
-  color: var(--fg-0);
-}
-.hero-quote h2 em { color: var(--accent); font-style: normal; }
-.hero-quote p {
-  color: var(--fg-2);
-  font-size: 14px;
-  line-height: 1.6;
-  margin: 0;
-}
-
-.hero-foot {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  gap: 18px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--fg-3);
-}
-.hero-foot span {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--success);
-  box-shadow: 0 0 8px var(--success);
 }
 </style>

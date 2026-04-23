@@ -44,9 +44,9 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <div class="page">
-    <h2 class="auth-title display">Réinitialiser le mot de passe</h2>
-    <p class="auth-sub-mono">$ auth --reset-password</p>
+  <div>
+    <h2 class="font-display text-[32px] font-normal tracking-[-0.015em] text-fg-0 mb-0.5">Réinitialiser le mot de passe</h2>
+    <p class="font-mono text-[11px] text-fg-2 mb-6">$ auth --reset-password</p>
 
     <Message v-if="!token" severity="error" :closable="false">
       Lien de réinitialisation invalide.
@@ -56,15 +56,15 @@ async function handleSubmit() {
       <Message severity="success" :closable="false">
         Mot de passe réinitialisé avec succès.
       </Message>
-      <RouterLink to="/login" class="back-link">Se connecter</RouterLink>
+      <RouterLink to="/login" class="mt-4 block text-center font-mono text-xs text-accent no-underline transition-colors duration-fast hover:text-accent-hi">Se connecter</RouterLink>
     </template>
 
     <template v-else>
-      <Message v-if="error" severity="error" :closable="false" class="msg">{{ error }}</Message>
+      <Message v-if="error" severity="error" :closable="false" class="mb-2">{{ error }}</Message>
 
-      <form @submit.prevent="handleSubmit" class="form">
-        <div class="field">
-          <label for="password">Nouveau mot de passe</label>
+      <form @submit.prevent="handleSubmit" class="flex flex-col gap-4">
+        <div class="flex flex-col gap-1.5">
+          <label for="password" class="font-mono text-[11px] uppercase tracking-[0.08em] text-fg-2">Nouveau mot de passe</label>
           <Password
             id="password"
             v-model="password"
@@ -75,8 +75,8 @@ async function handleSubmit() {
           />
         </div>
 
-        <div class="field">
-          <label for="confirmPassword">Confirmer le mot de passe</label>
+        <div class="flex flex-col gap-1.5">
+          <label for="confirmPassword" class="font-mono text-[11px] uppercase tracking-[0.08em] text-fg-2">Confirmer le mot de passe</label>
           <Password
             id="confirmPassword"
             v-model="confirmPassword"
@@ -97,62 +97,3 @@ async function handleSubmit() {
     </template>
   </div>
 </template>
-
-<style scoped>
-.page-title {
-  text-align: center;
-  font-family: var(--font-display);
-  font-size: 32px;
-  font-weight: 400;
-  letter-spacing: -0.015em;
-  margin-bottom: 2px;
-}
-
-.page-sub {
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--fg-2);
-  margin-bottom: 1.5rem;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.field label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 400;
-  color: var(--fg-2);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.back-link {
-  display: block;
-  text-align: center;
-  margin-top: 1rem;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--accent);
-  text-decoration: none;
-  transition: color 0.15s;
-}
-
-.back-link:hover {
-  color: var(--accent-hi);
-}
-
-.msg {
-  margin-bottom: 0.5rem;
-}
-</style>
