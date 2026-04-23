@@ -1,29 +1,28 @@
 <template>
   <div class="auth-hero">
-    <!-- Grid overlay -->
     <div class="grid-overlay" aria-hidden="true"></div>
 
-    <!-- Constellation -->
-    <svg class="constellation" viewBox="0 0 500 600" aria-hidden="true">
-      <circle cx="120" cy="160" r="3" opacity="0.8">
-        <animate attributeName="opacity" values="0.3;1;0.3" dur="4s" repeatCount="indefinite" />
-      </circle>
-      <circle cx="250" cy="280" r="4">
-        <animate attributeName="opacity" values="0.5;1;0.5" dur="3.5s" repeatCount="indefinite" />
-      </circle>
-      <circle cx="380" cy="400" r="3" opacity="0.8">
-        <animate attributeName="opacity" values="0.3;0.9;0.3" dur="5s" repeatCount="indefinite" />
-      </circle>
-      <circle cx="370" cy="120" r="2" opacity="0.5">
-        <animate attributeName="opacity" values="0.2;0.7;0.2" dur="6s" repeatCount="indefinite" />
-      </circle>
-      <circle cx="100" cy="420" r="2" opacity="0.5">
-        <animate attributeName="opacity" values="0.2;0.6;0.2" dur="4.5s" repeatCount="indefinite" />
-      </circle>
-      <line x1="120" y1="160" x2="250" y2="280" />
-      <line x1="250" y1="280" x2="380" y2="400" />
-      <line x1="370" y1="120" x2="250" y2="280" />
-      <line x1="250" y1="280" x2="100" y2="420" />
+    <!-- Orion constellation (10 stars, 7 connections) -->
+    <svg class="constellation" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      <!-- Connections -->
+      <line x1="20" y1="18" x2="32" y2="48" /><!-- Bellatrix→Alnitak -->
+      <line x1="36" y1="22" x2="28" y2="52" /><!-- Betelgeuse→Alnilam -->
+      <line x1="32" y1="48" x2="28" y2="52" /><!-- Alnitak→Alnilam -->
+      <line x1="28" y1="52" x2="24" y2="56" /><!-- Alnilam→Mintaka -->
+      <line x1="24" y1="56" x2="18" y2="78" /><!-- Mintaka→Rigel -->
+      <line x1="28" y1="52" x2="40" y2="78" /><!-- Alnilam→Saiph -->
+      <line x1="20" y1="18" x2="36" y2="22" /><!-- Bellatrix→Betelgeuse -->
+      <!-- Stars -->
+      <circle cx="20" cy="18" r="0.7" style="animation: twinkle 2s ease-in-out 0s infinite" />
+      <circle cx="36" cy="22" r="0.83" style="animation: twinkle 3s ease-in-out 0.3s infinite" />
+      <circle cx="32" cy="48" r="0.7" style="animation: twinkle 4s ease-in-out 0.6s infinite" />
+      <circle cx="28" cy="52" r="0.73" style="animation: twinkle 2s ease-in-out 0.9s infinite" />
+      <circle cx="24" cy="56" r="0.7" style="animation: twinkle 3s ease-in-out 1.2s infinite" />
+      <circle cx="18" cy="78" r="0.77" style="animation: twinkle 4s ease-in-out 1.5s infinite" />
+      <circle cx="40" cy="78" r="0.7" style="animation: twinkle 2s ease-in-out 1.8s infinite" />
+      <circle cx="50" cy="10" r="0.5" style="animation: twinkle 3s ease-in-out 2.1s infinite" />
+      <circle cx="10" cy="40" r="0.43" style="animation: twinkle 4s ease-in-out 2.4s infinite" />
+      <circle cx="60" cy="65" r="0.47" style="animation: twinkle 2s ease-in-out 2.7s infinite" />
     </svg>
 
     <div class="hero-brand">
@@ -46,15 +45,13 @@
     </div>
 
     <div class="hero-quote">
-      <h2>Identity infrastructure<br/>built for <em>engineers</em></h2>
-      <p>Authentication, authorization, and user management — API-first, self-hosted, fully yours.</p>
+      <h2>Identity,<br/>built for <em>engineers</em>.</h2>
+      <p>Single sign-on, passkeys, federated identity and fine-grained access — under a single audit-grade log.</p>
     </div>
 
     <div class="hero-foot">
-      <span><span class="dot"></span> SOC 2 Type II</span>
-      <span>ISO 27001</span>
-      <span>eu-west-3</span>
-      <span>99.99% SLA</span>
+      <span><span class="dot"></span>SOC 2 · ISO 27001</span>
+      <span>eu-west-3 · 99.99% SLA</span>
     </div>
   </div>
 </template>
@@ -129,10 +126,7 @@
   letter-spacing: -0.01em;
   color: var(--fg-0);
 }
-.brand-wordmark em {
-  color: var(--accent);
-  font-style: normal;
-}
+.brand-wordmark em { color: var(--accent); font-style: normal; }
 
 .hero-quote {
   position: relative;

@@ -4,6 +4,9 @@ import { useRouter } from 'vue-router'
 import { apiPost } from '../composables/useApi'
 import { useAuthState } from '../composables/useAuthState'
 import { useSettings } from '../composables/useSettings'
+import FlowStepIndicator from '../components/FlowStepIndicator.vue'
+import AuthDivider from '../components/AuthDivider.vue'
+import FederatedButtons from '../components/FederatedButtons.vue'
 
 const router = useRouter()
 const { state, updateFromLoginResponse } = useAuthState()
@@ -74,35 +77,31 @@ async function handleSubmit() {
 
 <template>
   <div class="page">
-    <div class="auth-step">
-      <span class="auth-step-dot"></span>
-      Sign in
-    </div>
-    <h2 class="auth-title display">Connexion</h2>
-    <p class="auth-sub">Entrez vos identifiants pour continuer</p>
+    <FlowStepIndicator label="sign in" :step="1" :total="3" />
+    <h1 class="auth-title display">Welcome back.</h1>
+    <p class="auth-sub">Entrez votre email pour continuer. Nous détecterons votre provider automatiquement.</p>
 
     <Message v-if="error" severity="error" :closable="false" class="msg">{{ error }}</Message>
 
-    <form @submit.prevent="handleSubmit" class="form">
+    <form @submit.prevent="handleSubmit">
       <div class="auth-field">
-        <label for="email" class="auth-field-label">Email</label>
+        <label class="auth-field-label">Email</label>
         <InputText
-          id="email"
           v-model="email"
           type="email"
-          placeholder="vous@exemple.com"
+          placeholder="vous@entreprise.com"
           required
           fluid
         />
+        <div class="auth-field-hint">Détection SSO automatique pour votre domaine.</div>
       </div>
 
       <div class="auth-field">
         <div class="auth-field-label">
-          <label for="password">Mot de passe</label>
-          <RouterLink to="/forgot-password" class="auth-field-link">Mot de passe oublié ?</RouterLink>
+          <span>Mot de passe</span>
+          <RouterLink to="/forgot-password" class="auth-field-link">Oublié ?</RouterLink>
         </div>
         <Password
-          id="password"
           v-model="password"
           :feedback="false"
           toggle-mask
@@ -112,38 +111,29 @@ async function handleSubmit() {
       </div>
 
       <button type="submit" class="auth-btn" :disabled="loading">
-        {{ loading ? 'Connexion...' : 'Se connecter' }}
+        {{ loading ? 'Connexion…' : 'Continuer' }}
+        <svg v-if="!loading" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
       </button>
-
-      <div class="auth-foot" v-if="registrationEnabled !== false">
-        Pas encore de compte ? <RouterLink to="/register">Créer un compte</RouterLink>
-      </div>
     </form>
+
+    <button class="fed-btn fed-btn--passkey" type="button">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 0 0 8 11a4 4 0 1 1 8 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0 0 15.171 17m3.839-1.132c.11-2.243.175-4.472.175-6.868a8 8 0 1 0-16 0c0 .61.006 1.213.018 1.812M12 11c0 .61-.006 1.213-.018 1.812"/>
+      </svg>
+      Se connecter avec un passkey
+    </button>
+
+    <AuthDivider text="ou continuer avec" />
+
+    <FederatedButtons />
+
+    <div class="auth-foot" v-if="registrationEnabled !== false">
+      Pas encore de compte ? <RouterLink to="/register">Créer un compte</RouterLink>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.auth-step {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--accent);
-  margin-bottom: 14px;
-}
-.auth-step-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 8px var(--accent);
-  animation: pulse-dot 2s ease-in-out infinite;
-}
-
 .auth-title {
   font-family: var(--font-display);
   font-size: 32px;
@@ -153,7 +143,6 @@ async function handleSubmit() {
   margin: 0 0 8px;
   line-height: 1.15;
 }
-
 .auth-sub {
   font-size: 13.5px;
   color: var(--fg-2);
@@ -161,18 +150,12 @@ async function handleSubmit() {
   margin: 0 0 28px;
 }
 
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
 .auth-field {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  margin-bottom: 14px;
 }
-
 .auth-field-label {
   display: flex;
   align-items: center;
@@ -184,7 +167,6 @@ async function handleSubmit() {
   letter-spacing: 0.1em;
   color: var(--fg-2);
 }
-
 .auth-field-link {
   color: var(--accent);
   text-decoration: none;
@@ -193,6 +175,11 @@ async function handleSubmit() {
   font-size: 11.5px;
 }
 .auth-field-link:hover { text-decoration: underline; }
+.auth-field-hint {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--fg-3);
+}
 
 .auth-btn {
   width: 100%;
@@ -217,18 +204,37 @@ async function handleSubmit() {
   box-shadow: 0 8px 20px -8px var(--accent);
   transform: translateY(-1px);
 }
-.auth-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
+.auth-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.fed-btn--passkey {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  color: var(--fg-0);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--t-fast);
+  font-family: inherit;
+  margin-top: 10px;
+  width: 100%;
+}
+.fed-btn--passkey:hover {
+  background: var(--bg-2);
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
 }
 
 .auth-foot {
   font-size: 12.5px;
   color: var(--fg-2);
   text-align: center;
-  margin-top: var(--s-2);
+  margin-top: 18px;
 }
 .auth-foot a {
   color: var(--accent);
@@ -237,7 +243,5 @@ async function handleSubmit() {
 }
 .auth-foot a:hover { text-decoration: underline; }
 
-.msg {
-  margin-bottom: var(--s-2);
-}
+.msg { margin-bottom: var(--s-2); }
 </style>

@@ -9,7 +9,8 @@ import AuthHero from '../components/AuthHero.vue'
     <div class="auth-panel">
       <div class="auth-panel-top">
         <div class="tenant-badge">
-          tenant: <strong>orionauth</strong>
+          <span class="tenant-dot"></span>
+        signing in to <strong>OrionAuth</strong>
         </div>
       </div>
 
@@ -18,7 +19,7 @@ import AuthHero from '../components/AuthHero.vue'
       </div>
 
       <div class="auth-panel-bottom">
-        <span>&copy; 2026 OrionAuth</span>
+        <span>&copy; 2026 OrionAuth · v1.0.0</span>
         <div class="auth-panel-links">
           <a href="#">Privacy</a>
           <a href="#">Terms</a>
@@ -65,6 +66,12 @@ import AuthHero from '../components/AuthHero.vue'
   font-family: var(--font-mono);
   font-size: 11px;
   color: var(--fg-2);
+}
+.tenant-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
 }
 .tenant-badge strong {
   color: var(--fg-0);
