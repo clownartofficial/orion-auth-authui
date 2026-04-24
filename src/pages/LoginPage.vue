@@ -60,7 +60,7 @@ async function handleSubmit() {
   const data = result.data
 
   if (data.redirect_uri && data.code) {
-    performRedirect(data, state.responseMode)
+    performRedirect({ redirect_uri: data.redirect_uri, code: data.code, state: data.state }, state.responseMode)
     return
   }
 
