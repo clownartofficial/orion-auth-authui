@@ -3,6 +3,7 @@ import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { apiPost } from '../composables/useApi'
 import { useAuthState } from '../composables/useAuthState'
+import { performRedirect } from '../composables/useRedirect'
 import FlowStepIndicator from '../components/FlowStepIndicator.vue'
 
 const router = useRouter()
@@ -48,10 +49,7 @@ async function handleSubmit() {
   const data = result.data
 
   if (data.redirect_uri && data.code) {
-    const url = new URL(data.redirect_uri)
-    url.searchParams.set('code', data.code)
-    if (data.state) url.searchParams.set('state', data.state)
-    window.location.href = url.toString()
+    performRedirect(data, state.responseMode)
     return
   }
 

@@ -17,6 +17,7 @@ export interface AuthState {
   loginHint: string | null
   display: string | null
   prompt: string | null
+  responseMode: string | null
 }
 
 const state = reactive<AuthState>({
@@ -30,6 +31,7 @@ const state = reactive<AuthState>({
   loginHint: null,
   display: null,
   prompt: null,
+  responseMode: null,
 })
 
 export function useAuthState() {
@@ -44,6 +46,7 @@ export function useAuthState() {
     login_hint?: string
     display?: string
     prompt?: string
+    response_mode?: string
   }) {
     state.requestId = data.request_id
     state.clientName = data.client_name
@@ -55,6 +58,7 @@ export function useAuthState() {
     state.loginHint = data.login_hint ?? null
     state.display = data.display ?? null
     state.prompt = data.prompt ?? null
+    state.responseMode = data.response_mode ?? null
   }
 
   function updateFromLoginResponse(data: {
@@ -78,6 +82,7 @@ export function useAuthState() {
     state.loginHint = null
     state.display = null
     state.prompt = null
+    state.responseMode = null
   }
 
   return {

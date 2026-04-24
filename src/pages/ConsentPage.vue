@@ -2,15 +2,18 @@
 import { ref, computed } from 'vue'
 import { apiPost } from '../composables/useApi'
 import { useAuthState } from '../composables/useAuthState'
+import { performRedirect } from '../composables/useRedirect'
 
 const scopeDescriptions: Record<string, string> = {
   openid: 'Vérifier votre identité',
   profile: 'Accéder à votre nom et photo de profil',
   email: 'Voir votre adresse e-mail',
+  phone: 'Voir votre numéro de téléphone',
+  address: 'Voir votre adresse postale',
   offline_access: 'Rester connecté en votre nom',
 }
 
-const oidcScopes = ['openid', 'profile', 'email', 'offline_access']
+const oidcScopes = ['openid', 'profile', 'email', 'phone', 'address', 'offline_access']
 
 const { state } = useAuthState()
 
@@ -31,6 +34,7 @@ async function handleApprove() {
     redirect_uri: string
     code: string
     state?: string
+    response_mode?: string
   }>('/authorize/consent', {
     request_id: state.requestId,
     scopes_granted: uniqueScopes,
@@ -43,11 +47,7 @@ async function handleApprove() {
     return
   }
 
-  const data = result.data
-  const url = new URL(data.redirect_uri)
-  url.searchParams.set('code', data.code)
-  if (data.state) url.searchParams.set('state', data.state)
-  window.location.href = url.toString()
+  performRedirect(result.data, result.data.response_mode || state.responseMode)
 }
 
 function handleDeny() {

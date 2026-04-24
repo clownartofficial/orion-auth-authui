@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { apiGet } from '../composables/useApi'
 import { useAuthState } from '../composables/useAuthState'
+import { performRedirect } from '../composables/useRedirect'
 
 const route = useRoute()
 const router = useRouter()
@@ -17,7 +18,7 @@ onMounted(async () => {
     'client_id', 'redirect_uri', 'response_type', 'scope', 'state',
     'code_challenge', 'code_challenge_method', 'nonce', 'audience',
     'prompt', 'max_age', 'display', 'ui_locales', 'claims_locales',
-    'acr_values', 'login_hint', 'claims', 'id_token_hint',
+    'acr_values', 'login_hint', 'claims', 'id_token_hint', 'response_mode',
   ]
   for (const key of keys) {
     const value = route.query[key]
@@ -47,10 +48,12 @@ onMounted(async () => {
       identifier: string
       permissions: { name: string; description: string | null }[]
     }
+    response_mode?: string
     redirect?: {
       redirect_uri: string
       code: string
       state: string
+      response_mode?: string
     }
   }>('/authorize', params)
 
@@ -62,11 +65,7 @@ onMounted(async () => {
 
   // prompt=none: immediate redirect with authorization code
   if (result.data.redirect) {
-    const r = result.data.redirect
-    const sep = r.redirect_uri.includes('?') ? '&' : '?'
-    let url = `${r.redirect_uri}${sep}code=${encodeURIComponent(r.code)}`
-    if (r.state) url += `&state=${encodeURIComponent(r.state)}`
-    window.location.href = url
+    performRedirect(result.data.redirect, result.data.redirect.response_mode)
     return
   }
 
