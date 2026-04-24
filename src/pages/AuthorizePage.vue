@@ -13,7 +13,12 @@ const error = ref<string | null>(null)
 
 onMounted(async () => {
   const params: Record<string, string> = {}
-  const keys = ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'code_challenge', 'code_challenge_method', 'nonce', 'audience']
+  const keys = [
+    'client_id', 'redirect_uri', 'response_type', 'scope', 'state',
+    'code_challenge', 'code_challenge_method', 'nonce', 'audience',
+    'prompt', 'max_age', 'display', 'ui_locales', 'claims_locales',
+    'acr_values', 'login_hint', 'claims', 'id_token_hint',
+  ]
   for (const key of keys) {
     const value = route.query[key]
     if (typeof value === 'string') {
@@ -34,16 +39,34 @@ onMounted(async () => {
     scopes_requested: string[]
     requires_login: boolean
     requires_consent: boolean
+    login_hint?: string
+    display?: string
+    prompt?: string
     resource?: {
       name: string
       identifier: string
       permissions: { name: string; description: string | null }[]
+    }
+    redirect?: {
+      redirect_uri: string
+      code: string
+      state: string
     }
   }>('/authorize', params)
 
   if (!result.ok) {
     error.value = result.message
     loading.value = false
+    return
+  }
+
+  // prompt=none: immediate redirect with authorization code
+  if (result.data.redirect) {
+    const r = result.data.redirect
+    const sep = r.redirect_uri.includes('?') ? '&' : '?'
+    let url = `${r.redirect_uri}${sep}code=${encodeURIComponent(r.code)}`
+    if (r.state) url += `&state=${encodeURIComponent(r.state)}`
+    window.location.href = url
     return
   }
 

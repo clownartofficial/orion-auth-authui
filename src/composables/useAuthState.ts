@@ -14,6 +14,9 @@ export interface AuthState {
   requiresLogin: boolean
   requiresConsent: boolean
   resource: ResourceInfo | null
+  loginHint: string | null
+  display: string | null
+  prompt: string | null
 }
 
 const state = reactive<AuthState>({
@@ -24,6 +27,9 @@ const state = reactive<AuthState>({
   requiresLogin: false,
   requiresConsent: false,
   resource: null,
+  loginHint: null,
+  display: null,
+  prompt: null,
 })
 
 export function useAuthState() {
@@ -35,6 +41,9 @@ export function useAuthState() {
     requires_login: boolean
     requires_consent: boolean
     resource?: ResourceInfo
+    login_hint?: string
+    display?: string
+    prompt?: string
   }) {
     state.requestId = data.request_id
     state.clientName = data.client_name
@@ -43,6 +52,9 @@ export function useAuthState() {
     state.requiresLogin = data.requires_login
     state.requiresConsent = data.requires_consent
     state.resource = data.resource ?? null
+    state.loginHint = data.login_hint ?? null
+    state.display = data.display ?? null
+    state.prompt = data.prompt ?? null
   }
 
   function updateFromLoginResponse(data: {
@@ -63,6 +75,9 @@ export function useAuthState() {
     state.requiresLogin = false
     state.requiresConsent = false
     state.resource = null
+    state.loginHint = null
+    state.display = null
+    state.prompt = null
   }
 
   return {

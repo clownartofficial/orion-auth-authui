@@ -12,7 +12,12 @@ const router = useRouter()
 const { state, updateFromLoginResponse } = useAuthState()
 const { registrationEnabled, fetchSettings } = useSettings()
 
-onMounted(fetchSettings)
+onMounted(() => {
+  fetchSettings()
+  if (state.loginHint) {
+    email.value = state.loginHint
+  }
+})
 
 const email = ref('')
 const password = ref('')

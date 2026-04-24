@@ -43,6 +43,10 @@ const router = createRouter({
       component: () => import('../pages/DevicePage.vue'),
     },
     {
+      path: '/logout',
+      component: () => import('../pages/LogoutPage.vue'),
+    },
+    {
       path: '/:pathMatch(.*)*',
       redirect: '/authorize',
     },
