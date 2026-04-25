@@ -2,6 +2,7 @@ interface RedirectData {
   redirect_uri: string
   code?: string
   state?: string
+  iss?: string
 }
 
 export function performRedirect(data: RedirectData, responseMode?: string | null) {
@@ -9,6 +10,7 @@ export function performRedirect(data: RedirectData, responseMode?: string | null
   const params: Record<string, string> = {}
   if (data.code) params.code = data.code
   if (data.state) params.state = data.state
+  if (data.iss) params.iss = data.iss
 
   if (mode === 'fragment') {
     const fragment = new URLSearchParams(params).toString()
