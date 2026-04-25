@@ -1,17 +1,27 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { apiPost } from '../composables/useApi'
+import { apiGet, apiPost } from '../composables/useApi'
 import { useAuthState } from '../composables/useAuthState'
 import { performRedirect } from '../composables/useRedirect'
 import { useSettings } from '../composables/useSettings'
+import AuthSteps from '../components/AuthSteps.vue'
 import FlowStepIndicator from '../components/FlowStepIndicator.vue'
-// import AuthDivider from '../components/AuthDivider.vue'
-// import FederatedButtons from '../components/FederatedButtons.vue'
+import AuthDivider from '../components/AuthDivider.vue'
+import AuthAlert from '../components/AuthAlert.vue'
+import FederatedButtons from '../components/FederatedButtons.vue'
+import { IconChevron, IconArrowLeft, IconEye } from '../components/icons'
 
 const router = useRouter()
 const { state, updateFromLoginResponse } = useAuthState()
-const { registrationEnabled, fetchSettings } = useSettings()
+const { registrationEnabled, federationProviders, fetchSettings } = useSettings()
+
+const step = ref<'email' | 'password'>('email')
+const email = ref('')
+const password = ref('')
+const showPassword = ref(false)
+const loading = ref(false)
+const error = ref<string | null>(null)
 
 onMounted(() => {
   fetchSettings()
@@ -20,10 +30,34 @@ onMounted(() => {
   }
 })
 
-const email = ref('')
-const password = ref('')
-const loading = ref(false)
-const error = ref<string | null>(null)
+function goToPassword() {
+  if (!email.value) return
+  error.value = null
+  step.value = 'password'
+}
+
+function goBackToEmail() {
+  error.value = null
+  password.value = ''
+  showPassword.value = false
+  step.value = 'email'
+}
+
+async function handleFederated(providerName: string) {
+  loading.value = true
+  error.value = null
+
+  const result = await apiGet<{ authorization_url: string }>(
+    `/api/v1/auth/federation/${providerName}`
+  )
+
+  if (result.ok && result.data.authorization_url) {
+    window.location.href = result.data.authorization_url
+  } else {
+    loading.value = false
+    error.value = result.ok ? 'Erreur de redirection.' : result.message
+  }
+}
 
 async function handleSubmit() {
   error.value = null
@@ -33,6 +67,8 @@ async function handleSubmit() {
     redirect_uri?: string
     code?: string
     state?: string
+    iss?: string
+    session_state?: string
     request_id?: string
     requires_mfa?: boolean
     requires_consent?: boolean
@@ -50,7 +86,7 @@ async function handleSubmit() {
     if (result.status === 401) {
       error.value = 'Email ou mot de passe incorrect.'
     } else if (result.status === 403) {
-      error.value = 'Votre compte est verrouillé. Veuillez contacter le support.'
+      error.value = 'Votre compte est verrouille. Veuillez contacter le support.'
     } else {
       error.value = result.message
     }
@@ -60,7 +96,13 @@ async function handleSubmit() {
   const data = result.data
 
   if (data.redirect_uri && data.code) {
-    performRedirect({ redirect_uri: data.redirect_uri, code: data.code, state: data.state }, state.responseMode)
+    performRedirect({
+      redirect_uri: data.redirect_uri,
+      code: data.code,
+      state: data.state,
+      iss: data.iss,
+      session_state: data.session_state,
+    }, state.responseMode)
     return
   }
 
@@ -80,58 +122,107 @@ async function handleSubmit() {
 
 <template>
   <div>
-    <FlowStepIndicator label="sign in" :step="1" :total="3" />
-    <h1 class="font-display text-[32px] font-normal leading-[1.15] tracking-[-0.015em] text-fg-0 mb-2">Welcome back.</h1>
-    <p class="text-[13.5px] leading-[1.55] text-fg-2 mb-7">Entrez votre email pour continuer. Nous détecterons votre provider automatiquement.</p>
+    <!-- Email step -->
+    <template v-if="step === 'email'">
+      <AuthSteps :current="1" :total="3" />
+      <FlowStepIndicator label="connexion" />
 
-    <Message v-if="error" severity="error" :closable="false" class="mb-2">{{ error }}</Message>
+      <h1 class="mb-2 font-display text-[32px] font-normal leading-[1.15] tracking-[-0.015em] text-fg-0">
+        Bon retour.
+      </h1>
+      <p class="mb-7 text-[13.5px] leading-[1.55] text-fg-2">
+        Entrez votre adresse email pour continuer.
+      </p>
 
-    <form @submit.prevent="handleSubmit">
-      <div class="flex flex-col gap-1.5 mb-3.5">
-        <label class="flex items-center justify-between font-mono text-[10.5px] font-medium uppercase tracking-[0.1em] text-fg-2">Email</label>
-        <InputText
-          v-model="email"
-          type="email"
-          placeholder="vous@entreprise.com"
-          required
-          fluid
-        />
-        <div class="font-mono text-[11px] text-fg-3">Détection SSO automatique pour votre domaine.</div>
-      </div>
+      <AuthAlert v-if="error" severity="danger">{{ error }}</AuthAlert>
 
-      <div class="flex flex-col gap-1.5 mb-3.5">
-        <div class="flex items-center justify-between font-mono text-[10.5px] font-medium uppercase tracking-[0.1em] text-fg-2">
-          <span>Mot de passe</span>
-          <RouterLink to="/forgot-password" class="text-accent no-underline normal-case tracking-normal text-[11.5px] hover:underline">Oublié ?</RouterLink>
+      <form @submit.prevent="goToPassword">
+        <div class="mb-3.5 flex flex-col gap-1.5">
+          <label class="flex items-center justify-between font-mono text-[10.5px] font-medium uppercase tracking-[0.1em] text-fg-2">
+            Email
+          </label>
+          <input
+            v-model="email"
+            type="email"
+            class="input"
+            placeholder="vous@entreprise.com"
+            required
+            autofocus
+          />
+          <span class="font-mono text-[11px] text-fg-3">Nous detecterons le SSO automatiquement pour votre domaine.</span>
         </div>
-        <Password
-          v-model="password"
-          :feedback="false"
-          toggle-mask
-          required
-          fluid
-        />
+
+        <button type="submit" class="auth-btn" :disabled="loading">
+          Continuer <IconChevron :size="14" />
+        </button>
+      </form>
+
+      <template v-if="federationProviders.length > 0">
+        <AuthDivider />
+        <FederatedButtons :providers="federationProviders" @select="handleFederated" />
+      </template>
+
+      <div v-if="registrationEnabled !== false" class="mt-[18px] text-center text-[12.5px] text-fg-2">
+        Pas encore de compte ? <RouterLink to="/register" class="font-medium text-accent no-underline hover:underline">Creer un compte</RouterLink>
       </div>
+    </template>
 
-      <button type="submit" class="mt-2 w-full inline-flex items-center justify-center gap-2 rounded-md border-none bg-accent px-3.5 py-3 font-[inherit] text-sm font-semibold text-fg-0 cursor-pointer transition-all duration-fast hover:-translate-y-px hover:bg-accent-hi hover:shadow-[0_8px_20px_-8px_var(--accent)] disabled:cursor-not-allowed disabled:opacity-50 disabled:translate-y-0 disabled:shadow-none" :disabled="loading">
-        {{ loading ? 'Connexion...' : 'Continuer' }}
-        <svg v-if="!loading" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    <!-- Password step -->
+    <template v-else>
+      <AuthSteps :current="1" :total="3" />
+
+      <button
+        type="button"
+        class="mb-3 flex items-center gap-1.5 text-sm text-fg-2 hover:text-fg-0 cursor-pointer bg-transparent border-none font-[inherit] p-0"
+        @click="goBackToEmail"
+      >
+        <IconArrowLeft :size="13" /> Retour
       </button>
-    </form>
 
-    <!-- TODO: Passkey sign-in (needs WebAuthn backend support)
-    <button class="mt-2.5 flex w-full items-center justify-center gap-2 rounded-md border border-border bg-bg-1 px-3 py-2.5 font-[inherit] text-[13px] font-medium text-fg-0 cursor-pointer transition-all duration-fast hover:-translate-y-px hover:border-border-strong hover:bg-bg-2" type="button">
-      Se connecter avec un passkey
-    </button>
-    -->
+      <FlowStepIndicator label="mot de passe" />
 
-    <!-- TODO: Federated login (needs federation backend)
-    <AuthDivider text="ou continuer avec" />
-    <FederatedButtons />
-    -->
+      <h1 class="mb-2 font-display text-[32px] font-normal leading-[1.15] tracking-[-0.015em] text-fg-0">
+        Entrez votre mot de passe.
+      </h1>
+      <p class="mb-7 text-[13.5px] leading-[1.55] text-fg-2">
+        Connexion en tant que <strong class="font-medium text-fg-0">{{ email }}</strong>
+      </p>
 
-    <div class="mt-[18px] text-center text-[12.5px] text-fg-2" v-if="registrationEnabled !== false">
-      Pas encore de compte ? <RouterLink to="/register" class="text-accent no-underline font-medium hover:underline">Créer un compte</RouterLink>
-    </div>
+      <AuthAlert v-if="error" severity="danger">{{ error }}</AuthAlert>
+
+      <form @submit.prevent="handleSubmit">
+        <div class="mb-3.5 flex flex-col gap-1.5">
+          <label class="flex items-center justify-between font-mono text-[10.5px] font-medium uppercase tracking-[0.1em] text-fg-2">
+            <span>Mot de passe</span>
+            <RouterLink to="/forgot-password" class="text-[11.5px] normal-case tracking-normal text-accent no-underline hover:underline">
+              Oublie ?
+            </RouterLink>
+          </label>
+          <div class="relative">
+            <input
+              v-model="password"
+              :type="showPassword ? 'text' : 'password'"
+              class="input pr-10"
+              placeholder="••••••••••••"
+              required
+              autofocus
+            />
+            <button
+              type="button"
+              class="absolute right-2.5 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-fg-3 hover:text-fg-0 p-1"
+              @click="showPassword = !showPassword"
+              tabindex="-1"
+            >
+              <IconEye :size="16" :off="showPassword" />
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="auth-btn" :disabled="loading">
+          {{ loading ? 'Connexion...' : 'Continuer' }}
+          <IconChevron v-if="!loading" :size="14" />
+        </button>
+      </form>
+    </template>
   </div>
 </template>
