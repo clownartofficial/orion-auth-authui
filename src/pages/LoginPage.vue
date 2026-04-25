@@ -7,8 +7,10 @@ import { performRedirect } from '@/composables/useRedirect'
 import { useSettings } from '@/composables/useSettings'
 import type { FederationProviderInfo } from '@/composables/useSettings'
 import V2Card from '@/components/V2Card.vue'
-import OrionLogo from '@/components/OrionLogo.vue'
 import AuthAlert from '@/components/AuthAlert.vue'
+import { useTheme } from '@/composables/useTheme'
+import logoDark from '@/assets/logo-dark.svg'
+import logoLight from '@/assets/logo-light.svg'
 import { IconMail, IconChevron, IconEye, IconGoogle, IconMicrosoft, IconGitHub, IconApple, IconSSOEnterprise } from '@/components/icons'
 
 const router = useRouter()
@@ -22,6 +24,9 @@ const loading = ref(false)
 const error = ref<string | null>(null)
 
 const clientName = computed(() => state.clientName || 'OrionAuth')
+
+const { theme } = useTheme()
+const logoSrc = computed(() => theme.value === 'dark' ? logoDark : logoLight)
 
 onMounted(() => {
   fetchSettings()
@@ -90,7 +95,7 @@ async function handleSubmit() {
     <!-- Head: orbit logo + title -->
     <div class="v2-card__head">
       <div class="v2-orbit">
-        <OrionLogo :size="64" with-glow style="filter: drop-shadow(0 0 18px var(--accent-bg))" />
+        <img :src="logoSrc" alt="OrionAuth" class="h-16 w-16" style="filter: drop-shadow(0 0 18px var(--accent-bg))" />
         <span class="v2-orbit__satellite" />
       </div>
       <h1 class="v2-card__title">Connexion a <em>{{ clientName }}</em></h1>

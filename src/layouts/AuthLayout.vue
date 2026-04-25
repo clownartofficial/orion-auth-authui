@@ -1,6 +1,12 @@
 <script setup lang="ts">
-import OrionLogo from '@/components/OrionLogo.vue'
+import { computed } from 'vue'
+import { useTheme } from '@/composables/useTheme'
 import V2Stars from '@/components/V2Stars.vue'
+import logoDark from '@/assets/logo-dark.svg'
+import logoLight from '@/assets/logo-light.svg'
+
+const { theme } = useTheme()
+const logoSrc = computed(() => theme.value === 'dark' ? logoDark : logoLight)
 </script>
 
 <template>
@@ -11,7 +17,7 @@ import V2Stars from '@/components/V2Stars.vue'
     <!-- Top bar -->
     <header class="v2__top">
       <div class="v2__brand">
-        <OrionLogo :size="28" />
+        <img :src="logoSrc" alt="OrionAuth" class="h-7 w-7" />
         <span class="brand-wordmark">orion<em>auth</em></span>
       </div>
       <div class="v2__topbar-right" />
