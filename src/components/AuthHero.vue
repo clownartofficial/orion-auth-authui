@@ -1,3 +1,13 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useTheme } from '@/composables/useTheme'
+import logoDark from '@/assets/logo-dark.svg'
+import logoLight from '@/assets/logo-light.svg'
+
+const { theme } = useTheme()
+const logoSrc = computed(() => theme.value === 'dark' ? logoDark : logoLight)
+</script>
+
 <template>
   <div class="auth-hero relative flex flex-col justify-between overflow-hidden border-r border-border-subtle p-10 md:p-12">
     <div class="grid-overlay" aria-hidden="true"></div>
@@ -25,23 +35,9 @@
       <circle cx="60" cy="65" r="0.47" style="animation: twinkle 2s ease-in-out 2.7s infinite" />
     </svg>
 
-    <div class="relative z-[2] flex items-center gap-2.5">
-      <div class="brand-mark relative h-7 w-7 shrink-0 overflow-hidden rounded-md border border-border text-accent">
-        <svg viewBox="0 0 28 28" width="28" height="28" class="absolute inset-0">
-          <g fill="currentColor">
-            <circle cx="8" cy="9" r="1.4" opacity="0.85"/>
-            <circle cx="14" cy="14" r="1.8"/>
-            <circle cx="20" cy="19" r="1.4" opacity="0.85"/>
-            <circle cx="20" cy="6" r="0.9" opacity="0.55"/>
-            <circle cx="6" cy="20" r="0.9" opacity="0.55"/>
-          </g>
-          <g stroke="currentColor" stroke-width="0.6" opacity="0.5" fill="none">
-            <path d="M8 9 L14 14 L20 19"/>
-            <path d="M20 6 L14 14 L6 20"/>
-          </g>
-        </svg>
-      </div>
-      <div class="font-display text-[19px] font-normal tracking-[-0.01em] text-fg-0">orion<em class="not-italic text-accent">auth</em></div>
+    <div class="relative z-[2] flex items-center gap-3">
+      <img :src="logoSrc" alt="OrionAuth" class="h-9 w-9" />
+      <div class="font-display text-[22px] font-normal tracking-[-0.01em] text-fg-0">orion<em class="not-italic text-accent">auth</em></div>
     </div>
 
     <div class="relative z-[2] max-w-[420px]">
@@ -79,11 +75,4 @@
 
 .constellation circle { fill: var(--accent); }
 .constellation line { stroke: var(--accent); stroke-width: 0.6; opacity: 0.35; }
-
-.brand-mark {
-  background:
-    radial-gradient(circle at 30% 30%, var(--accent) 0%, transparent 45%),
-    radial-gradient(circle at 70% 70%, var(--accent-lo) 0%, transparent 50%),
-    var(--bg-inset);
-}
 </style>
