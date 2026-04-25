@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./tokens.css";
+@import "./auth.css";
 
 @theme {
   --color-bg-0: var(--bg-0);
