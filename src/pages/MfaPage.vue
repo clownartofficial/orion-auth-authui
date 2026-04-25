@@ -1,25 +1,67 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { apiPost } from '../composables/useApi'
 import { useAuthState } from '../composables/useAuthState'
 import { performRedirect } from '../composables/useRedirect'
+import AuthSteps from '../components/AuthSteps.vue'
 import FlowStepIndicator from '../components/FlowStepIndicator.vue'
+import AuthAlert from '../components/AuthAlert.vue'
+import { IconArrowLeft } from '../components/icons'
 
 const router = useRouter()
 const { state, updateFromLoginResponse } = useAuthState()
 
-const code = ref('')
+const digits = ref<string[]>(['', '', '', '', '', ''])
+const inputs = ref<(HTMLInputElement | null)[]>([])
 const loading = ref(false)
 const error = ref<string | null>(null)
 
-watch(code, (val) => {
-  if (val.length === 6) {
-    handleSubmit()
-  }
+onMounted(() => {
+  inputs.value[0]?.focus()
 })
 
+function setDigit(i: number, value: string) {
+  const v = value.replace(/\D/g, '').slice(0, 1)
+  const d = [...digits.value]
+  d[i] = v
+  digits.value = d
+
+  if (v && i < 5) {
+    inputs.value[i + 1]?.focus()
+  }
+
+  if (d.every(x => x !== '')) {
+    setTimeout(handleSubmit, 200)
+  }
+}
+
+function onKeyDown(i: number, e: KeyboardEvent) {
+  if (e.key === 'Backspace' && !digits.value[i] && i > 0) {
+    inputs.value[i - 1]?.focus()
+  }
+}
+
+function onPaste(e: ClipboardEvent) {
+  const text = (e.clipboardData?.getData('text') || '').replace(/\D/g, '').slice(0, 6)
+  if (text.length) {
+    digits.value = text.padEnd(6, '').split('').slice(0, 6)
+    if (text.length === 6) {
+      setTimeout(handleSubmit, 200)
+    }
+    e.preventDefault()
+  }
+}
+
+function clearDigits() {
+  digits.value = ['', '', '', '', '', '']
+  inputs.value[0]?.focus()
+}
+
 async function handleSubmit() {
+  const code = digits.value.join('')
+  if (code.length !== 6) return
+
   error.value = null
   loading.value = true
 
@@ -27,29 +69,37 @@ async function handleSubmit() {
     redirect_uri?: string
     code?: string
     state?: string
+    iss?: string
+    session_state?: string
     requires_consent?: boolean
     scopes?: string[]
   }>('/authorize/mfa', {
     request_id: state.requestId,
-    code: code.value,
+    code,
   })
 
   loading.value = false
 
   if (!result.ok) {
     if (result.status === 403) {
-      error.value = 'Code invalide. Veuillez réessayer.'
+      error.value = 'Code invalide. Veuillez reessayer.'
     } else {
       error.value = result.message
     }
-    code.value = ''
+    clearDigits()
     return
   }
 
   const data = result.data
 
   if (data.redirect_uri && data.code) {
-    performRedirect({ redirect_uri: data.redirect_uri, code: data.code, state: data.state }, state.responseMode)
+    performRedirect({
+      redirect_uri: data.redirect_uri,
+      code: data.code,
+      state: data.state,
+      iss: data.iss,
+      session_state: data.session_state,
+    }, state.responseMode)
     return
   }
 
@@ -62,31 +112,41 @@ async function handleSubmit() {
 
 <template>
   <div>
-    <button class="mb-3 inline-flex items-center gap-1.5 rounded-md border-none bg-transparent px-2 py-1 font-[inherit] text-[13px] text-fg-1 cursor-pointer transition-all duration-fast hover:bg-bg-2 hover:text-fg-0" @click="router.back()">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-      Retour
+    <AuthSteps :current="2" :total="3" />
+
+    <button
+      type="button"
+      class="mb-3 flex items-center gap-1.5 text-sm text-fg-2 hover:text-fg-0 cursor-pointer bg-transparent border-none font-[inherit] p-0"
+      @click="router.push('/login')"
+    >
+      <IconArrowLeft :size="13" /> Retour
     </button>
 
-    <FlowStepIndicator label="vérification" :step="2" :total="3" />
-    <h1 class="font-display text-[32px] font-normal leading-[1.15] tracking-[-0.015em] text-fg-0 mb-2">Entrez le code.</h1>
-    <p class="text-[13.5px] leading-[1.55] text-fg-2 mb-7">Entrez le code à 6 chiffres de votre application d'authentification.</p>
+    <FlowStepIndicator label="verification" />
 
-    <Message v-if="error" severity="error" :closable="false" class="mb-2">{{ error }}</Message>
+    <h1 class="mb-2 font-display text-[32px] font-normal leading-[1.15] tracking-[-0.015em] text-fg-0">
+      Entrez le code.
+    </h1>
+    <p class="mb-7 text-[13.5px] leading-[1.55] text-fg-2">
+      Entrez le code a 6 chiffres de votre application d'authentification.
+    </p>
 
-    <div class="flex justify-center mb-2">
-      <InputOtp v-model="code" :length="6" integer-only :disabled="loading" />
+    <AuthAlert v-if="error" severity="danger">{{ error }}</AuthAlert>
+
+    <div class="flex justify-center gap-2 my-2" @paste="onPaste">
+      <input
+        v-for="(d, i) in digits"
+        :key="i"
+        :ref="(el) => { inputs[i] = el as HTMLInputElement }"
+        class="otp-digit"
+        :class="{ 'otp-digit--filled': d }"
+        inputmode="numeric"
+        maxlength="1"
+        :value="d"
+        :disabled="loading"
+        @input="setDigit(i, ($event.target as HTMLInputElement).value)"
+        @keydown="onKeyDown(i, $event)"
+      />
     </div>
-
-    <!-- TODO: OTP countdown timer (needs backend expiry info)
-    <div class="mt-4 text-center font-mono text-[11px] text-fg-3">
-      code expires in <span class="text-fg-0">04:59</span>
-    </div>
-    -->
-
-    <!-- TODO: Resend code (needs backend endpoint)
-    <div class="mt-6 text-center text-[12.5px] text-fg-2">
-      Vous n'avez pas reçu le code ? <a href="#" class="text-accent no-underline font-medium hover:underline">Renvoyer</a>
-    </div>
-    -->
   </div>
 </template>
