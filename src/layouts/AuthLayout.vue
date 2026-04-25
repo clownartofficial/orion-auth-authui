@@ -14,9 +14,7 @@ import V2Stars from '@/components/V2Stars.vue'
         <OrionLogo :size="28" />
         <span class="brand-wordmark">orion<em>auth</em></span>
       </div>
-      <div class="v2__topbar-right">
-        <div class="v2__chip"><span class="dot" />operational</div>
-      </div>
+      <div class="v2__topbar-right" />
     </header>
 
     <!-- Stage -->
@@ -29,13 +27,6 @@ import V2Stars from '@/components/V2Stars.vue'
     <!-- Footer -->
     <footer class="v2__foot">
       <span>&copy; 2026 OrionAuth</span>
-      <div class="v2-trust">
-        <span>SOC 2</span>
-        <span class="v2-trust__sep" />
-        <span>ISO 27001</span>
-        <span class="v2-trust__sep" />
-        <span>GDPR</span>
-      </div>
       <div class="v2__foot__links">
         <a href="#">Confidentialite</a>
         <a href="#">Conditions</a>

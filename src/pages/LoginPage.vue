@@ -7,16 +7,14 @@ import { performRedirect } from '@/composables/useRedirect'
 import { useSettings } from '@/composables/useSettings'
 import type { FederationProviderInfo } from '@/composables/useSettings'
 import V2Card from '@/components/V2Card.vue'
-import V2Telemetry from '@/components/V2Telemetry.vue'
 import OrionLogo from '@/components/OrionLogo.vue'
 import AuthAlert from '@/components/AuthAlert.vue'
-import { IconMail, IconChevron, IconArrowLeft, IconEye, IconGoogle, IconMicrosoft, IconGitHub, IconApple, IconSSOEnterprise } from '@/components/icons'
+import { IconMail, IconChevron, IconEye, IconGoogle, IconMicrosoft, IconGitHub, IconApple, IconSSOEnterprise } from '@/components/icons'
 
 const router = useRouter()
 const { state, updateFromLoginResponse } = useAuthState()
 const { registrationEnabled, federationProviders, fetchSettings } = useSettings()
 
-const step = ref<'email' | 'password'>('email')
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
@@ -41,19 +39,6 @@ const iconMap: Record<string, any> = {
 
 function getFedIcon(p: FederationProviderInfo) {
   return iconMap[p.name.toLowerCase()] || IconSSOEnterprise
-}
-
-function goToPassword() {
-  if (!email.value) return
-  error.value = null
-  step.value = 'password'
-}
-
-function goBackToEmail() {
-  error.value = null
-  password.value = ''
-  showPassword.value = false
-  step.value = 'email'
 }
 
 async function handleFederated(providerName: string) {
@@ -114,100 +99,72 @@ async function handleSubmit() {
 
     <!-- Body -->
     <div class="v2-card__body">
-      <!-- Email step -->
-      <template v-if="step === 'email'">
-        <AuthAlert v-if="error" severity="danger">{{ error }}</AuthAlert>
+      <AuthAlert v-if="error" severity="danger">{{ error }}</AuthAlert>
 
-        <form @submit.prevent="goToPassword">
-          <div class="v2-field">
-            <label class="v2-field__label">Email</label>
-            <div class="v2-input-wrap">
-              <span class="v2-input-wrap__icon"><IconMail :size="15" /></span>
-              <input
-                v-model="email"
-                type="email"
-                placeholder="vous@entreprise.com"
-                required
-                autofocus
-              />
-            </div>
+      <form @submit.prevent="handleSubmit">
+        <div class="v2-field">
+          <label class="v2-field__label">Email</label>
+          <div class="v2-input-wrap">
+            <span class="v2-input-wrap__icon"><IconMail :size="15" /></span>
+            <input
+              v-model="email"
+              type="email"
+              placeholder="vous@entreprise.com"
+              required
+              autofocus
+            />
           </div>
-
-          <button type="submit" class="v2-cta" :disabled="loading">
-            <span class="v2-cta__main">Continuer <IconChevron :size="14" /></span>
-            <span class="v2-cta__kbd">&#9166; enter</span>
-          </button>
-        </form>
-
-        <!-- Federated icon-only row -->
-        <div v-if="federationProviders.length > 0" class="v2-fed-row">
-          <span class="v2-fed-row__label">ou</span>
-          <button
-            v-for="p in federationProviders"
-            :key="p.name"
-            class="v2-fed"
-            :aria-label="p.display_name || p.name"
-            @click="handleFederated(p.name)"
-          >
-            <component :is="getFedIcon(p)" :size="16" />
-          </button>
         </div>
-      </template>
 
-      <!-- Password step -->
-      <template v-else>
-        <button
-          type="button"
-          class="mb-3 flex items-center gap-1.5 text-sm text-fg-2 hover:text-fg-0 cursor-pointer bg-transparent border-none font-[inherit] p-0"
-          @click="goBackToEmail"
-        >
-          <IconArrowLeft :size="13" /> Retour
-        </button>
-
-        <p class="mb-4 text-[13px] text-fg-2">
-          Connexion en tant que <strong class="font-medium text-fg-0">{{ email }}</strong>
-        </p>
-
-        <AuthAlert v-if="error" severity="danger">{{ error }}</AuthAlert>
-
-        <form @submit.prevent="handleSubmit">
-          <div class="v2-field">
-            <label class="v2-field__label flex items-center justify-between">
-              <span>Mot de passe</span>
-              <RouterLink to="/forgot-password" class="text-[11px] normal-case tracking-normal text-accent no-underline hover:underline">
-                Oublie ?
-              </RouterLink>
-            </label>
-            <div class="v2-input-wrap">
-              <span class="v2-input-wrap__icon"><IconEye :size="15" /></span>
-              <input
-                v-model="password"
-                :type="showPassword ? 'text' : 'password'"
-                placeholder="••••••••••••"
-                required
-                autofocus
-              />
-              <button
-                type="button"
-                class="v2-input-wrap__suffix cursor-pointer border-none bg-transparent"
-                style="border-left: 1px solid var(--border-subtle)"
-                @click="showPassword = !showPassword"
-                tabindex="-1"
-              >
-                {{ showPassword ? 'masquer' : 'afficher' }}
-              </button>
-            </div>
+        <div class="v2-field">
+          <label class="v2-field__label flex items-center justify-between">
+            <span>Mot de passe</span>
+            <RouterLink to="/forgot-password" class="text-[11px] normal-case tracking-normal text-accent no-underline hover:underline">
+              Oublie ?
+            </RouterLink>
+          </label>
+          <div class="v2-input-wrap">
+            <span class="v2-input-wrap__icon"><IconEye :size="15" /></span>
+            <input
+              v-model="password"
+              :type="showPassword ? 'text' : 'password'"
+              placeholder="••••••••••••"
+              required
+            />
+            <button
+              type="button"
+              class="v2-input-wrap__suffix cursor-pointer border-none bg-transparent"
+              style="border-left: 1px solid var(--border-subtle)"
+              @click="showPassword = !showPassword"
+              tabindex="-1"
+            >
+              {{ showPassword ? 'masquer' : 'afficher' }}
+            </button>
           </div>
+        </div>
 
-          <button type="submit" class="v2-cta" :disabled="loading">
-            <span class="v2-cta__main">
-              {{ loading ? 'Connexion...' : 'Continuer' }}
-              <IconChevron v-if="!loading" :size="14" />
-            </span>
-            <span class="v2-cta__kbd">&#9166; enter</span>
-          </button>
-        </form>
-      </template>
+        <button type="submit" class="v2-cta" :disabled="loading">
+          <span class="v2-cta__main">
+            {{ loading ? 'Connexion...' : 'Se connecter' }}
+            <IconChevron v-if="!loading" :size="14" />
+          </span>
+          <span class="v2-cta__kbd">&#9166; enter</span>
+        </button>
+      </form>
+
+      <!-- Federated icon-only row -->
+      <div v-if="federationProviders.length > 0" class="v2-fed-row">
+        <span class="v2-fed-row__label">ou</span>
+        <button
+          v-for="p in federationProviders"
+          :key="p.name"
+          class="v2-fed"
+          :aria-label="p.display_name || p.name"
+          @click="handleFederated(p.name)"
+        >
+          <component :is="getFedIcon(p)" :size="16" />
+        </button>
+      </div>
     </div>
 
     <!-- Card footer -->
@@ -218,6 +175,4 @@ async function handleSubmit() {
       <RouterLink to="/forgot-password">Probleme de connexion ?</RouterLink>
     </div>
   </V2Card>
-
-  <V2Telemetry :client-name="clientName" />
 </template>
