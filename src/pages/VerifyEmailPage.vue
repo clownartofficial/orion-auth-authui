@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { apiPost } from '../composables/useApi'
+import AuthAlert from '../components/AuthAlert.vue'
 
 const route = useRoute()
 const token = route.query.token as string | undefined
@@ -12,7 +13,7 @@ const success = ref(false)
 
 onMounted(async () => {
   if (!token) {
-    error.value = 'Lien de vérification invalide.'
+    error.value = 'Lien de verification invalide.'
     loading.value = false
     return
   }
@@ -32,21 +33,27 @@ onMounted(async () => {
 
 <template>
   <div>
-    <h2 class="font-display text-[32px] font-normal tracking-[-0.015em] text-fg-0 mb-0.5">Vérification de l'email</h2>
-    <p class="font-mono text-[11px] text-fg-2 mb-6">$ auth --verify-email</p>
+    <h1 class="mb-2 font-display text-[32px] font-normal leading-[1.15] tracking-[-0.015em] text-fg-0">
+      Verification de votre email...
+    </h1>
+    <p class="mb-7 text-[13.5px] leading-[1.55] text-fg-2">
+      Veuillez patienter pendant que nous verifions votre adresse.
+    </p>
 
-    <div class="flex flex-col items-center gap-4">
-      <ProgressSpinner v-if="loading" />
+    <div class="flex flex-col items-center gap-5">
+      <div v-if="loading" class="auth-spinner"></div>
 
       <template v-if="success">
-        <Message severity="success" :closable="false">
-          Votre email a été vérifié avec succès.
-        </Message>
-        <RouterLink to="/login" class="font-mono text-xs text-accent no-underline transition-colors duration-fast hover:text-accent-hi">Se connecter</RouterLink>
+        <AuthAlert severity="success">
+          Votre email a ete verifie avec succes. Vous pouvez maintenant vous connecter.
+        </AuthAlert>
+        <RouterLink to="/login" class="font-medium text-[12.5px] text-accent no-underline hover:underline">
+          Se connecter
+        </RouterLink>
       </template>
 
       <template v-if="error">
-        <Message severity="error" :closable="false">{{ error }}</Message>
+        <AuthAlert severity="danger">{{ error }}</AuthAlert>
       </template>
     </div>
   </div>

@@ -3,6 +3,9 @@ import { ref, computed } from 'vue'
 import { apiPost } from '../composables/useApi'
 import { useAuthState } from '../composables/useAuthState'
 import { performRedirect } from '../composables/useRedirect'
+import AuthSteps from '@/components/AuthSteps.vue'
+import FlowStepIndicator from '@/components/FlowStepIndicator.vue'
+import AuthAlert from '@/components/AuthAlert.vue'
 
 const scopeDescriptions: Record<string, string> = {
   openid: 'Vérifier votre identité',
@@ -57,73 +60,96 @@ function handleDeny() {
 
 <template>
   <div>
-    <h2 class="font-display text-[32px] font-normal tracking-[-0.015em] text-fg-0 mb-0.5">Autorisation requise</h2>
-    <p class="font-mono text-[11px] text-fg-2 mb-2">$ auth --consent</p>
+    <AuthSteps :current="3" :total="3" />
+    <FlowStepIndicator label="autorisation" />
+
+    <h2 class="font-display text-[32px] font-normal tracking-[-0.015em] text-fg-0 mb-0.5">
+      Autoriser l'acces.
+    </h2>
+    <p class="text-[13px] text-fg-2 mb-6">
+      <strong>{{ state.clientName }}</strong> demande l'acces a votre compte.
+    </p>
 
     <!-- Resource-based flow -->
     <template v-if="state.resource">
-      <p class="text-[13px] text-fg-2 mb-1">
-        <strong>{{ state.clientName }}</strong> demande accès à
-        <strong>{{ state.resource.name }}</strong>
-      </p>
-      <p class="font-mono text-[11px] text-fg-2 mb-6">{{ state.resource.identifier }}</p>
-
-      <div class="mb-4 flex flex-col rounded-lg border border-border bg-bg-0 p-3.5">
-        <div class="mb-2 font-mono text-[10px] uppercase tracking-[0.06em] text-fg-2">Permissions demandées</div>
-        <ul class="m-0 flex list-none flex-col gap-2 p-0">
-          <li
-            v-for="perm in state.resource.permissions"
-            :key="perm.name"
-            class="flex flex-col gap-0.5"
-          >
-            <span class="font-mono text-[13px] text-fg-0">{{ perm.name }}</span>
-            <span v-if="perm.description" class="text-xs text-fg-2">{{ perm.description }}</span>
-          </li>
-        </ul>
+      <div class="device-card">
+        <div class="mb-2 font-mono text-[10px] uppercase tracking-[0.06em] text-fg-2">
+          Ressource
+        </div>
+        <div class="device-kv">
+          <span class="device-kv__k">nom</span>
+          <span class="device-kv__v">{{ state.resource.name }}</span>
+        </div>
+        <div class="device-kv">
+          <span class="device-kv__k">identifiant</span>
+          <span class="device-kv__v device-kv__v--accent">{{ state.resource.identifier }}</span>
+        </div>
       </div>
 
-      <div v-if="oidcRequestedScopes.length > 0" class="mb-4 flex flex-col rounded-lg border border-border bg-bg-0 p-3.5">
-        <div class="mb-2 font-mono text-[10px] uppercase tracking-[0.06em] text-fg-2">Informations personnelles</div>
-        <ul class="m-0 flex list-none flex-col gap-2 p-0">
-          <li
-            v-for="scope in oidcRequestedScopes"
-            :key="scope"
-            class="py-0.5 text-[13px] text-fg-0"
-          >
-            {{ scopeDescriptions[scope] || scope }}
-          </li>
-        </ul>
+      <div class="device-card">
+        <div class="mb-2 font-mono text-[10px] uppercase tracking-[0.06em] text-fg-2">
+          Permissions demandees
+        </div>
+        <div
+          v-for="perm in state.resource.permissions"
+          :key="perm.name"
+          class="device-kv"
+        >
+          <span class="device-kv__k">{{ perm.name }}</span>
+          <span class="device-kv__v">{{ perm.description || '—' }}</span>
+        </div>
+      </div>
+
+      <div v-if="oidcRequestedScopes.length > 0" class="device-card">
+        <div class="mb-2 font-mono text-[10px] uppercase tracking-[0.06em] text-fg-2">
+          Informations personnelles
+        </div>
+        <div
+          v-for="scope in oidcRequestedScopes"
+          :key="scope"
+          class="device-kv"
+        >
+          <span class="device-kv__k">{{ scope }}</span>
+          <span class="device-kv__v">{{ scopeDescriptions[scope] || scope }}</span>
+        </div>
       </div>
     </template>
 
     <!-- Standard OIDC flow (no resource) -->
     <template v-else>
-      <p class="text-[13px] text-fg-2 mb-1">
-        <strong>{{ state.clientName }}</strong> souhaite accéder à votre compte.
-      </p>
-
-      <ul class="mb-4 flex flex-col rounded-lg border border-border bg-bg-0 p-3.5">
-        <li v-for="scope in uniqueScopes" :key="scope" class="py-0.5 text-[13px] text-fg-0">
-          {{ scopeDescriptions[scope] || scope }}
-        </li>
-      </ul>
+      <div class="device-card">
+        <div class="mb-2 font-mono text-[10px] uppercase tracking-[0.06em] text-fg-2">
+          Informations demandees
+        </div>
+        <div
+          v-for="scope in uniqueScopes"
+          :key="scope"
+          class="device-kv"
+        >
+          <span class="device-kv__k">{{ scope }}</span>
+          <span class="device-kv__v">{{ scopeDescriptions[scope] || scope }}</span>
+        </div>
+      </div>
     </template>
 
-    <Message v-if="error" severity="error" :closable="false" class="mb-2">{{ error }}</Message>
+    <AuthAlert v-if="error" severity="danger">{{ error }}</AuthAlert>
 
-    <div class="flex justify-end gap-3">
-      <Button
-        label="Refuser"
-        severity="secondary"
-        outlined
-        @click="handleDeny"
+    <div class="flex flex-col gap-3 mt-6">
+      <button
+        class="auth-btn"
         :disabled="loading"
-      />
-      <Button
-        label="Autoriser"
-        :loading="loading"
         @click="handleApprove"
-      />
+      >
+        <template v-if="loading">Autorisation en cours...</template>
+        <template v-else>Autoriser</template>
+      </button>
+      <button
+        class="fed-btn text-danger"
+        :disabled="loading"
+        @click="handleDeny"
+      >
+        Refuser
+      </button>
     </div>
   </div>
 </template>

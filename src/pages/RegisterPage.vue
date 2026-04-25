@@ -3,6 +3,9 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { apiPost } from '../composables/useApi'
 import { useSettings } from '../composables/useSettings'
+import FlowStepIndicator from '@/components/FlowStepIndicator.vue'
+import AuthAlert from '@/components/AuthAlert.vue'
+import { IconEye } from '@/components/icons'
 
 const route = useRoute()
 const router = useRouter()
@@ -19,6 +22,9 @@ const confirmPassword = ref('')
 const loading = ref(false)
 const error = ref<string | null>(null)
 const success = ref(false)
+
+const showPassword = ref(false)
+const showConfirm = ref(false)
 
 onMounted(async () => {
   if (!isInvite.value) {
@@ -90,83 +96,126 @@ async function handleSubmit() {
 
 <template>
   <div>
-    <h2 class="font-display text-[32px] font-normal tracking-[-0.015em] text-fg-0 mb-0.5">Créer un compte</h2>
-    <p class="font-mono text-[11px] text-fg-2 mb-6">$ auth --register{{ isInvite ? ' --invite' : '' }}</p>
+    <FlowStepIndicator label="inscription" />
+
+    <h2 class="font-display text-[32px] font-normal tracking-[-0.015em] text-fg-0 mb-0.5">
+      {{ isInvite ? 'Finaliser votre invitation.' : 'Creer un compte.' }}
+    </h2>
+    <p class="font-mono text-[11px] text-fg-2 mb-6">
+      $ auth --register{{ isInvite ? ' --invite' : '' }}
+    </p>
 
     <template v-if="success">
-      <Message severity="success" :closable="false">
+      <AuthAlert severity="success">
         <template v-if="isInvite">
           Compte créé avec succès. Vous pouvez maintenant vous connecter.
         </template>
         <template v-else>
           Compte créé avec succès. Vérifiez votre email pour activer votre compte.
         </template>
-      </Message>
-      <RouterLink to="/login" class="mt-4 block text-center font-mono text-xs text-accent no-underline transition-colors duration-fast hover:text-accent-hi">
+      </AuthAlert>
+      <RouterLink
+        to="/login"
+        class="mt-4 block text-center font-mono text-xs text-accent no-underline transition-colors duration-fast hover:text-accent-hi"
+      >
         {{ isInvite ? 'Se connecter' : 'Retour à la connexion' }}
       </RouterLink>
     </template>
 
     <template v-else>
-      <Message v-if="error" severity="error" :closable="false" class="mb-2">{{ error }}</Message>
+      <AuthAlert v-if="error" severity="danger">{{ error }}</AuthAlert>
 
       <form @submit.prevent="handleSubmit" class="flex flex-col gap-4">
         <div class="flex flex-col gap-1.5">
-          <label for="displayName" class="font-mono text-[11px] uppercase tracking-[0.08em] text-fg-2">Nom d'affichage</label>
-          <InputText
+          <label for="displayName" class="font-mono text-[11px] uppercase tracking-[0.08em] text-fg-2">
+            Nom d'affichage
+          </label>
+          <input
             id="displayName"
             v-model="displayName"
+            type="text"
+            class="input"
             placeholder="Optionnel"
-            fluid
           />
         </div>
 
         <div class="flex flex-col gap-1.5">
-          <label for="email" class="font-mono text-[11px] uppercase tracking-[0.08em] text-fg-2">Email</label>
-          <InputText
+          <label for="email" class="font-mono text-[11px] uppercase tracking-[0.08em] text-fg-2">
+            Email
+          </label>
+          <input
             id="email"
             v-model="email"
             type="email"
+            class="input"
             placeholder="vous@exemple.com"
             :disabled="isInvite"
             required
-            fluid
           />
         </div>
 
         <div class="flex flex-col gap-1.5">
-          <label for="password" class="font-mono text-[11px] uppercase tracking-[0.08em] text-fg-2">Mot de passe</label>
-          <Password
-            id="password"
-            v-model="password"
-            :feedback="false"
-            toggle-mask
-            required
-            fluid
-          />
+          <label for="password" class="font-mono text-[11px] uppercase tracking-[0.08em] text-fg-2">
+            Mot de passe
+          </label>
+          <div class="relative">
+            <input
+              id="password"
+              v-model="password"
+              :type="showPassword ? 'text' : 'password'"
+              class="input"
+              placeholder="8 caractères minimum"
+              required
+            />
+            <button
+              type="button"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-fg-3 hover:text-fg-0 transition-colors"
+              tabindex="-1"
+              @click="showPassword = !showPassword"
+            >
+              <IconEye :size="16" :off="showPassword" />
+            </button>
+          </div>
         </div>
 
         <div class="flex flex-col gap-1.5">
-          <label for="confirmPassword" class="font-mono text-[11px] uppercase tracking-[0.08em] text-fg-2">Confirmer le mot de passe</label>
-          <Password
-            id="confirmPassword"
-            v-model="confirmPassword"
-            :feedback="false"
-            toggle-mask
-            required
-            fluid
-          />
+          <label for="confirmPassword" class="font-mono text-[11px] uppercase tracking-[0.08em] text-fg-2">
+            Confirmer le mot de passe
+          </label>
+          <div class="relative">
+            <input
+              id="confirmPassword"
+              v-model="confirmPassword"
+              :type="showConfirm ? 'text' : 'password'"
+              class="input"
+              required
+            />
+            <button
+              type="button"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-fg-3 hover:text-fg-0 transition-colors"
+              tabindex="-1"
+              @click="showConfirm = !showConfirm"
+            >
+              <IconEye :size="16" :off="showConfirm" />
+            </button>
+          </div>
         </div>
 
-        <Button
+        <button
           type="submit"
-          label="Créer le compte"
-          :loading="loading"
-          fluid
-        />
+          class="auth-btn"
+          :disabled="loading"
+        >
+          {{ loading ? 'Création en cours...' : 'Créer le compte' }}
+        </button>
 
         <div class="text-center font-mono text-xs">
-          <RouterLink to="/login" class="text-accent no-underline transition-colors duration-fast hover:text-accent-hi">Déjà un compte ? Se connecter</RouterLink>
+          <RouterLink
+            to="/login"
+            class="text-accent no-underline transition-colors duration-fast hover:text-accent-hi"
+          >
+            Déjà un compte ? Se connecter
+          </RouterLink>
         </div>
       </form>
     </template>
