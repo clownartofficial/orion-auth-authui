@@ -87,9 +87,16 @@
   background: var(--bg-1);
   border: 1px solid var(--border-subtle);
   border-radius: var(--r-full);
+  font-family: var(--font-mono);
   font-size: 10.5px;
   color: var(--fg-2);
   white-space: nowrap;
+  cursor: pointer;
+  transition: all 120ms cubic-bezier(0.2, 0, 0, 1);
+}
+.v2__chip:hover {
+  border-color: var(--border-strong);
+  color: var(--fg-0);
 }
 .v2__chip .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--success); box-shadow: 0 0 6px var(--success); }
 

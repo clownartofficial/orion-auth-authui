@@ -5,8 +5,20 @@ import V2Stars from '@/components/V2Stars.vue'
 import logoDark from '@/assets/logo-dark.svg'
 import logoLight from '@/assets/logo-light.svg'
 
-const { theme } = useTheme()
+const { theme, mode, cycle } = useTheme()
 const logoSrc = computed(() => theme.value === 'dark' ? logoDark : logoLight)
+
+const themeIcon = computed(() => {
+  if (mode.value === 'auto') return '&#9788;' // auto/system
+  if (mode.value === 'dark') return '&#9790;'  // moon
+  return '&#9728;'                              // sun
+})
+
+const themeLabel = computed(() => {
+  if (mode.value === 'auto') return 'Auto'
+  if (mode.value === 'dark') return 'Sombre'
+  return 'Clair'
+})
 </script>
 
 <template>
@@ -20,7 +32,16 @@ const logoSrc = computed(() => theme.value === 'dark' ? logoDark : logoLight)
         <img :src="logoSrc" alt="OrionAuth" class="h-7 w-7" />
         <span class="brand-wordmark">orion<em>auth</em></span>
       </div>
-      <div class="v2__topbar-right" />
+      <div class="v2__topbar-right">
+        <button
+          class="v2__chip"
+          @click="cycle"
+          :title="`Theme : ${themeLabel}`"
+        >
+          <span v-html="themeIcon" />
+          {{ themeLabel }}
+        </button>
+      </div>
     </header>
 
     <!-- Stage -->
