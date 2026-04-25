@@ -3,6 +3,7 @@ interface RedirectData {
   code?: string
   state?: string
   iss?: string
+  session_state?: string
   access_token?: string
   token_type?: string
   expires_in?: number
@@ -15,6 +16,7 @@ export function performRedirect(data: RedirectData, responseMode?: string | null
   if (data.code) params.code = data.code
   if (data.state) params.state = data.state
   if (data.iss) params.iss = data.iss
+  if (data.session_state) params.session_state = data.session_state
   if (data.access_token) params.access_token = data.access_token
   if (data.token_type) params.token_type = data.token_type
   if (data.expires_in) params.expires_in = String(data.expires_in)
