@@ -1,15 +1,32 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const redirectUri = ref<string | null>(
   typeof route.query.redirect_uri === 'string' ? route.query.redirect_uri : null,
 )
+
+// Front-channel logout: render hidden iframes for each RP logout URI
+const frontchannelLogoutUris = computed(() => {
+  const uris = route.query.frontchannel_logout_uris
+  if (!uris) return []
+  if (Array.isArray(uris)) return uris.filter((u): u is string => typeof u === 'string')
+  if (typeof uris === 'string') return uris.split(',').filter(Boolean)
+  return []
+})
 </script>
 
 <template>
   <div>
+    <!-- Hidden iframes for front-channel logout -->
+    <iframe
+      v-for="uri in frontchannelLogoutUris"
+      :key="uri"
+      :src="uri"
+      style="display: none; width: 0; height: 0; border: 0"
+    />
+
     <h1 class="font-display text-[32px] font-normal leading-[1.15] tracking-[-0.015em] text-fg-0 mb-2">Session terminee.</h1>
     <p class="text-[13.5px] leading-[1.55] text-fg-2 mb-7">Vous avez ete deconnecte avec succes.</p>
 
