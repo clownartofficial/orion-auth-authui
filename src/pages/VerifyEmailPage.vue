@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { apiPost } from '../composables/useApi'
-import AuthAlert from '../components/AuthAlert.vue'
+import { apiPost } from '@/composables/useApi'
+import V2Card from '@/components/V2Card.vue'
+import AuthAlert from '@/components/AuthAlert.vue'
 
 const route = useRoute()
 const token = route.query.token as string | undefined
@@ -32,29 +33,30 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div>
-    <h1 class="mb-2 font-display text-[32px] font-normal leading-[1.15] tracking-[-0.015em] text-fg-0">
-      Verification de votre email...
-    </h1>
-    <p class="mb-7 text-[13.5px] leading-[1.55] text-fg-2">
-      Veuillez patienter pendant que nous verifions votre adresse.
-    </p>
+  <V2Card path="auth.orion.io / <b>verify-email</b>">
+    <div class="v2-card__head">
+      <h1 class="v2-card__title">Verification de votre email</h1>
+      <p class="v2-card__sub">Veuillez patienter pendant que nous verifions votre adresse.</p>
+    </div>
 
-    <div class="flex flex-col items-center gap-5">
-      <div v-if="loading" class="auth-spinner"></div>
+    <div class="v2-card__body">
+      <div v-if="loading" style="display: flex; justify-content: center; padding: 1.5rem 0">
+        <div class="auth-spinner"></div>
+      </div>
 
       <template v-if="success">
         <AuthAlert severity="success">
           Votre email a ete verifie avec succes. Vous pouvez maintenant vous connecter.
         </AuthAlert>
-        <RouterLink to="/login" class="font-medium text-[12.5px] text-accent no-underline hover:underline">
-          Se connecter
-        </RouterLink>
       </template>
 
       <template v-if="error">
         <AuthAlert severity="danger">{{ error }}</AuthAlert>
       </template>
     </div>
-  </div>
+
+    <div v-if="success || error" class="v2-card__foot">
+      <RouterLink to="/login">Se connecter</RouterLink>
+    </div>
+  </V2Card>
 </template>

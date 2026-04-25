@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import V2Card from '@/components/V2Card.vue'
 import { IconCheck, IconChevron } from '@/components/icons'
 
 const route = useRoute()
@@ -19,31 +20,33 @@ const frontchannelLogoutUris = computed(() => {
 </script>
 
 <template>
-  <div>
-    <!-- Hidden iframes for front-channel logout -->
-    <iframe
-      v-for="uri in frontchannelLogoutUris"
-      :key="uri"
-      :src="uri"
-      style="display: none; width: 0; height: 0; border: 0"
-    />
+  <!-- Hidden iframes for front-channel logout -->
+  <iframe
+    v-for="uri in frontchannelLogoutUris"
+    :key="uri"
+    :src="uri"
+    style="display: none; width: 0; height: 0; border: 0"
+  />
 
-    <div class="flex flex-col items-center text-center pt-4">
-      <div class="success-orb mb-6">
+  <V2Card path="auth.orion.io / <b>logout</b>">
+    <div class="v2-card__head">
+      <div class="success-orb">
         <IconCheck :size="32" :stroke-width="2.5" />
       </div>
+      <h1 class="v2-card__title">Deconnexion reussie</h1>
+    </div>
 
-      <h1 class="font-display text-[28px] font-normal leading-[1.15] tracking-[-0.015em] text-fg-0 mb-2">Deconnexion reussie.</h1>
-      <p class="text-[13px] leading-[1.55] text-fg-2 mb-7">Vous avez ete deconnecte avec succes.</p>
+    <div class="v2-card__body">
+      <p class="text-[13px] leading-[1.55] text-fg-2 text-center">
+        Vous avez ete deconnecte avec succes.
+      </p>
+    </div>
 
-      <a
-        v-if="redirectUri"
-        :href="redirectUri"
-        class="fed-btn w-full no-underline"
-      >
+    <div v-if="redirectUri" class="v2-card__foot">
+      <a :href="redirectUri" class="fed-btn w-full no-underline">
         Retour a l'application
         <IconChevron :size="14" />
       </a>
     </div>
-  </div>
+  </V2Card>
 </template>

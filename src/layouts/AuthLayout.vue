@@ -1,35 +1,45 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import AuthHero from '../components/AuthHero.vue'
-import { useAuthState } from '@/composables/useAuthState'
-
-const { state } = useAuthState()
-const clientName = computed(() => state.clientName || 'OrionAuth')
+import OrionLogo from '@/components/OrionLogo.vue'
+import V2Stars from '@/components/V2Stars.vue'
 </script>
 
 <template>
-  <div class="grid min-h-screen grid-cols-1 overflow-hidden bg-bg-0 md:grid-cols-[1fr_520px]">
-    <AuthHero class="hidden md:flex" />
+  <div class="v2">
+    <div class="v2__bg" />
+    <V2Stars />
 
-    <div class="flex min-h-screen flex-col bg-bg-0 px-6 py-8 md:px-14 md:pb-10 md:pt-14">
-      <div class="mb-auto flex items-center justify-between">
-        <div class="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-bg-inset px-2.5 py-[5px] font-mono text-[11px] text-fg-2">
-          <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>
-          connexion a <strong class="font-medium text-fg-0">{{ clientName }}</strong>
-        </div>
+    <!-- Top bar -->
+    <header class="v2__top">
+      <div class="v2__brand">
+        <OrionLogo :size="28" />
+        <span class="brand-wordmark">orion<em>auth</em></span>
       </div>
+      <div class="v2__topbar-right">
+        <div class="v2__chip"><span class="dot" />operational</div>
+      </div>
+    </header>
 
-      <div class="mx-auto my-10 w-full max-w-[400px] animate-fade-in">
+    <!-- Stage -->
+    <main class="v2__stage">
+      <div style="width: 100%; max-width: 460px; display: flex; flex-direction: column; align-items: center">
         <slot />
       </div>
+    </main>
 
-      <div class="mt-auto flex items-center justify-between border-t border-border-subtle pt-6 font-mono text-[11px] text-fg-3">
-        <span>&copy; 2026 OrionAuth</span>
-        <div class="flex gap-[18px]">
-          <a href="#" class="text-fg-2 no-underline hover:text-fg-0">Confidentialite</a>
-          <a href="#" class="text-fg-2 no-underline hover:text-fg-0">Conditions</a>
-        </div>
+    <!-- Footer -->
+    <footer class="v2__foot">
+      <span>&copy; 2026 OrionAuth</span>
+      <div class="v2-trust">
+        <span>SOC 2</span>
+        <span class="v2-trust__sep" />
+        <span>ISO 27001</span>
+        <span class="v2-trust__sep" />
+        <span>GDPR</span>
       </div>
-    </div>
+      <div class="v2__foot__links">
+        <a href="#">Confidentialite</a>
+        <a href="#">Conditions</a>
+      </div>
+    </footer>
   </div>
 </template>

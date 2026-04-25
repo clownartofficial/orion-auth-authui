@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { apiPost } from '../composables/useApi'
-import { useSettings } from '../composables/useSettings'
-import FlowStepIndicator from '@/components/FlowStepIndicator.vue'
+import { apiPost } from '@/composables/useApi'
+import { useSettings } from '@/composables/useSettings'
+import V2Card from '@/components/V2Card.vue'
 import AuthAlert from '@/components/AuthAlert.vue'
-import { IconEye } from '@/components/icons'
+import { IconEye, IconChevron } from '@/components/icons'
 
 const route = useRoute()
 const router = useRouter()
@@ -39,7 +39,7 @@ async function handleSubmit() {
   error.value = null
 
   if (password.value.length < 8) {
-    error.value = 'Le mot de passe doit contenir au moins 8 caractères.'
+    error.value = 'Le mot de passe doit contenir au moins 8 caracteres.'
     return
   }
 
@@ -61,9 +61,9 @@ async function handleSubmit() {
 
     if (!result.ok) {
       if (result.status === 400) {
-        error.value = 'Invitation invalide ou expirée.'
+        error.value = 'Invitation invalide ou expiree.'
       } else if (result.status === 409) {
-        error.value = 'Cette invitation a déjà été utilisée.'
+        error.value = 'Cette invitation a deja ete utilisee.'
       } else {
         error.value = result.message
       }
@@ -80,9 +80,9 @@ async function handleSubmit() {
 
     if (!result.ok) {
       if (result.status === 403) {
-        error.value = "L'inscription publique est désactivée. Contactez un administrateur pour recevoir une invitation."
+        error.value = "L'inscription publique est desactivee. Contactez un administrateur pour recevoir une invitation."
       } else if (result.status === 409) {
-        error.value = 'Un compte existe déjà avec cet email.'
+        error.value = 'Un compte existe deja avec cet email.'
       } else {
         error.value = result.message
       }
@@ -95,129 +95,113 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <div>
-    <FlowStepIndicator label="inscription" />
+  <V2Card path="auth.orion.io / <b>register</b>">
+    <div class="v2-card__head">
+      <h1 class="v2-card__title">
+        {{ isInvite ? 'Finaliser votre invitation' : 'Creer un compte' }}
+      </h1>
+      <p class="v2-card__sub">
+        {{ isInvite ? 'Completez votre profil pour activer votre compte.' : 'Remplissez les informations ci-dessous.' }}
+      </p>
+    </div>
 
-    <h2 class="font-display text-[32px] font-normal tracking-[-0.015em] text-fg-0 mb-0.5">
-      {{ isInvite ? 'Finaliser votre invitation.' : 'Creer un compte.' }}
-    </h2>
-    <p class="font-mono text-[11px] text-fg-2 mb-6">
-      $ auth --register{{ isInvite ? ' --invite' : '' }}
-    </p>
+    <div class="v2-card__body">
+      <template v-if="success">
+        <AuthAlert severity="success">
+          <template v-if="isInvite">
+            Compte cree avec succes. Vous pouvez maintenant vous connecter.
+          </template>
+          <template v-else>
+            Compte cree avec succes. Verifiez votre email pour activer votre compte.
+          </template>
+        </AuthAlert>
+      </template>
 
-    <template v-if="success">
-      <AuthAlert severity="success">
-        <template v-if="isInvite">
-          Compte créé avec succès. Vous pouvez maintenant vous connecter.
-        </template>
-        <template v-else>
-          Compte créé avec succès. Vérifiez votre email pour activer votre compte.
-        </template>
-      </AuthAlert>
-      <RouterLink
-        to="/login"
-        class="mt-4 block text-center font-mono text-xs text-accent no-underline transition-colors duration-fast hover:text-accent-hi"
-      >
-        {{ isInvite ? 'Se connecter' : 'Retour à la connexion' }}
+      <template v-else>
+        <AuthAlert v-if="error" severity="danger">{{ error }}</AuthAlert>
+
+        <form @submit.prevent="handleSubmit">
+          <div class="v2-field">
+            <label class="v2-field__label">Nom d'affichage</label>
+            <div class="v2-input-wrap">
+              <input
+                v-model="displayName"
+                type="text"
+                placeholder="Optionnel"
+              />
+            </div>
+          </div>
+
+          <div class="v2-field">
+            <label class="v2-field__label">Email</label>
+            <div class="v2-input-wrap">
+              <input
+                v-model="email"
+                type="email"
+                placeholder="vous@exemple.com"
+                :disabled="isInvite"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="v2-field">
+            <label class="v2-field__label">Mot de passe</label>
+            <div class="v2-input-wrap">
+              <input
+                v-model="password"
+                :type="showPassword ? 'text' : 'password'"
+                placeholder="8 caracteres minimum"
+                required
+              />
+              <button
+                type="button"
+                class="v2-input-wrap__suffix cursor-pointer border-none bg-transparent"
+                style="border-left: 1px solid var(--border-subtle)"
+                @click="showPassword = !showPassword"
+                tabindex="-1"
+              >
+                <IconEye :size="15" :off="showPassword" />
+              </button>
+            </div>
+          </div>
+
+          <div class="v2-field">
+            <label class="v2-field__label">Confirmer le mot de passe</label>
+            <div class="v2-input-wrap">
+              <input
+                v-model="confirmPassword"
+                :type="showConfirm ? 'text' : 'password'"
+                placeholder="Repetez le mot de passe"
+                required
+              />
+              <button
+                type="button"
+                class="v2-input-wrap__suffix cursor-pointer border-none bg-transparent"
+                style="border-left: 1px solid var(--border-subtle)"
+                @click="showConfirm = !showConfirm"
+                tabindex="-1"
+              >
+                <IconEye :size="15" :off="showConfirm" />
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="v2-cta" :disabled="loading">
+            <span class="v2-cta__main">
+              {{ loading ? 'Creation en cours...' : 'Creer le compte' }}
+              <IconChevron v-if="!loading" :size="14" />
+            </span>
+            <span class="v2-cta__kbd">&#9166; enter</span>
+          </button>
+        </form>
+      </template>
+    </div>
+
+    <div class="v2-card__foot">
+      <RouterLink to="/login">
+        {{ success && isInvite ? 'Se connecter' : 'Deja un compte ? Se connecter' }}
       </RouterLink>
-    </template>
-
-    <template v-else>
-      <AuthAlert v-if="error" severity="danger">{{ error }}</AuthAlert>
-
-      <form @submit.prevent="handleSubmit" class="flex flex-col gap-4">
-        <div class="flex flex-col gap-1.5">
-          <label for="displayName" class="font-mono text-[11px] uppercase tracking-[0.08em] text-fg-2">
-            Nom d'affichage
-          </label>
-          <input
-            id="displayName"
-            v-model="displayName"
-            type="text"
-            class="input"
-            placeholder="Optionnel"
-          />
-        </div>
-
-        <div class="flex flex-col gap-1.5">
-          <label for="email" class="font-mono text-[11px] uppercase tracking-[0.08em] text-fg-2">
-            Email
-          </label>
-          <input
-            id="email"
-            v-model="email"
-            type="email"
-            class="input"
-            placeholder="vous@exemple.com"
-            :disabled="isInvite"
-            required
-          />
-        </div>
-
-        <div class="flex flex-col gap-1.5">
-          <label for="password" class="font-mono text-[11px] uppercase tracking-[0.08em] text-fg-2">
-            Mot de passe
-          </label>
-          <div class="relative">
-            <input
-              id="password"
-              v-model="password"
-              :type="showPassword ? 'text' : 'password'"
-              class="input"
-              placeholder="8 caractères minimum"
-              required
-            />
-            <button
-              type="button"
-              class="absolute right-3 top-1/2 -translate-y-1/2 text-fg-3 hover:text-fg-0 transition-colors"
-              tabindex="-1"
-              @click="showPassword = !showPassword"
-            >
-              <IconEye :size="16" :off="showPassword" />
-            </button>
-          </div>
-        </div>
-
-        <div class="flex flex-col gap-1.5">
-          <label for="confirmPassword" class="font-mono text-[11px] uppercase tracking-[0.08em] text-fg-2">
-            Confirmer le mot de passe
-          </label>
-          <div class="relative">
-            <input
-              id="confirmPassword"
-              v-model="confirmPassword"
-              :type="showConfirm ? 'text' : 'password'"
-              class="input"
-              required
-            />
-            <button
-              type="button"
-              class="absolute right-3 top-1/2 -translate-y-1/2 text-fg-3 hover:text-fg-0 transition-colors"
-              tabindex="-1"
-              @click="showConfirm = !showConfirm"
-            >
-              <IconEye :size="16" :off="showConfirm" />
-            </button>
-          </div>
-        </div>
-
-        <button
-          type="submit"
-          class="auth-btn"
-          :disabled="loading"
-        >
-          {{ loading ? 'Création en cours...' : 'Créer le compte' }}
-        </button>
-
-        <div class="text-center font-mono text-xs">
-          <RouterLink
-            to="/login"
-            class="text-accent no-underline transition-colors duration-fast hover:text-accent-hi"
-          >
-            Déjà un compte ? Se connecter
-          </RouterLink>
-        </div>
-      </form>
-    </template>
-  </div>
+    </div>
+  </V2Card>
 </template>
