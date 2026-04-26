@@ -1,7 +1,5 @@
-export { default as IconGoogle } from './IconGoogle.vue'
-export { default as IconMicrosoft } from './IconMicrosoft.vue'
+export { default as IconDiscord } from './IconDiscord.vue'
 export { default as IconGitHub } from './IconGitHub.vue'
-export { default as IconApple } from './IconApple.vue'
 export { default as IconSSOEnterprise } from './IconSSOEnterprise.vue'
 export { default as IconFingerprint } from './IconFingerprint.vue'
 export { default as IconMail } from './IconMail.vue'

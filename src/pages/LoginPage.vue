@@ -11,7 +11,7 @@ import AuthAlert from '@/components/AuthAlert.vue'
 import { useTheme } from '@/composables/useTheme'
 import logoDark from '@/assets/logo-dark.svg'
 import logoLight from '@/assets/logo-light.svg'
-import { IconMail, IconChevron, IconEye, IconGoogle, IconMicrosoft, IconGitHub, IconApple, IconSSOEnterprise } from '@/components/icons'
+import { IconMail, IconChevron, IconEye, IconDiscord, IconGitHub, IconSSOEnterprise } from '@/components/icons'
 
 const router = useRouter()
 const { state, updateFromLoginResponse } = useAuthState()
@@ -36,10 +36,8 @@ onMounted(() => {
 })
 
 const iconMap: Record<string, any> = {
-  google: IconGoogle,
-  microsoft: IconMicrosoft,
+  discord: IconDiscord,
   github: IconGitHub,
-  apple: IconApple,
 }
 
 function getFedIcon(p: FederationProviderInfo) {

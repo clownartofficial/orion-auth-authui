@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { FederationProviderInfo } from '@/composables/useSettings'
-import { IconGoogle, IconMicrosoft, IconGitHub, IconApple, IconSSOEnterprise } from '@/components/icons'
+import { IconDiscord, IconGitHub, IconSSOEnterprise } from '@/components/icons'
 
 const props = defineProps<{
   providers: FederationProviderInfo[]
@@ -12,10 +12,8 @@ const emit = defineEmits<{
 }>()
 
 const iconMap: Record<string, any> = {
-  google: IconGoogle,
-  microsoft: IconMicrosoft,
+  discord: IconDiscord,
   github: IconGitHub,
-  apple: IconApple,
 }
 
 const standardProviders = computed(() =>
