@@ -19,6 +19,7 @@ onMounted(async () => {
     'code_challenge', 'code_challenge_method', 'nonce', 'audience',
     'prompt', 'max_age', 'display', 'ui_locales', 'claims_locales',
     'acr_values', 'login_hint', 'claims', 'id_token_hint', 'response_mode',
+    'request_uri',
   ]
   for (const key of keys) {
     const value = route.query[key]
@@ -27,7 +28,9 @@ onMounted(async () => {
     }
   }
 
-  if (!params.client_id || !params.redirect_uri || !params.response_type) {
+  const hasPAR = !!params.client_id && !!params.request_uri
+  const hasStandardParams = !!params.client_id && !!params.redirect_uri && !!params.response_type
+  if (!hasPAR && !hasStandardParams) {
     error.value = 'Paramètres OAuth2 manquants.'
     loading.value = false
     return
