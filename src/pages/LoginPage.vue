@@ -72,9 +72,18 @@ async function handleSubmit() {
   loading.value = false
 
   if (!result.ok) {
-    if (result.status === 401) error.value = 'Email ou mot de passe incorrect.'
-    else if (result.status === 403) error.value = 'Votre compte est verrouille. Veuillez contacter le support.'
-    else error.value = result.message
+    // Prefer the server-side message (OAuth error_description, AppError message,
+    // etc.) — it conveys policy denial reasons, lockout details, etc. Fall back
+    // to a generic localized hint only when the server gave us nothing useful.
+    if (result.message && result.message !== result.status.toString()) {
+      error.value = result.message
+    } else if (result.status === 401) {
+      error.value = 'Email ou mot de passe incorrect.'
+    } else if (result.status === 403) {
+      error.value = 'Accès refusé.'
+    } else {
+      error.value = 'Une erreur est survenue.'
+    }
     return
   }
 

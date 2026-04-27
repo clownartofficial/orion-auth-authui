@@ -79,12 +79,14 @@ async function handleApprove(approved: boolean) {
   loading.value = false
 
   if (!result.ok) {
-    if (result.status === 401) {
+    if (result.message && result.message !== result.status.toString()) {
+      error.value = result.message
+    } else if (result.status === 401) {
       error.value = 'Email ou mot de passe incorrect.'
     } else if (result.status === 403) {
-      error.value = 'Votre compte est verrouille. Veuillez contacter le support.'
+      error.value = 'Accès refusé.'
     } else {
-      error.value = result.message
+      error.value = 'Une erreur est survenue.'
     }
     return
   }
