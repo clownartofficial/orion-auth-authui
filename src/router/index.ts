@@ -51,6 +51,10 @@ const router = createRouter({
       component: () => import('../pages/LinkAccountPage.vue'),
     },
     {
+      path: '/complete-account',
+      component: () => import('../pages/CompleteAccountPage.vue'),
+    },
+    {
       path: '/:pathMatch(.*)*',
       redirect: '/authorize',
     },
