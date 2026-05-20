@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
-import { apiGet, apiPost } from '@/composables/useApi'
+import { useRoute, useRouter } from 'vue-router'
+import { apiPost } from '@/composables/useApi'
 import { useAuthState } from '@/composables/useAuthState'
 import { performRedirect } from '@/composables/useRedirect'
 import { useSettings } from '@/composables/useSettings'
@@ -14,6 +14,7 @@ import logoLight from '@/assets/logo-light.svg'
 import { IconMail, IconChevron, IconEye, IconDiscord, IconGitHub, IconSSOEnterprise } from '@/components/icons'
 
 const router = useRouter()
+const route = useRoute()
 const { state, updateFromLoginResponse } = useAuthState()
 const { registrationEnabled, federationProviders, fetchSettings } = useSettings()
 
@@ -28,10 +29,25 @@ const clientName = computed(() => state.clientName || 'OrionAuth')
 const { theme } = useTheme()
 const logoSrc = computed(() => theme.value === 'dark' ? logoDark : logoLight)
 
+const federationErrors: Record<string, string> = {
+  account_exists_link_required:
+    'Un compte existe deja avec cet email. Connectez-vous en local puis liez le fournisseur depuis votre profil.',
+  registration_disabled:
+    "L'inscription publique est desactivee. Demandez une invitation a un administrateur.",
+  callback_failed: "La connexion via le fournisseur externe a echoue.",
+  authorize_resume_failed: 'Impossible de reprendre la demande d\u2019autorisation.',
+  authorize_complete_failed: 'Impossible de finaliser la demande d\u2019autorisation.',
+  provisioning_failed: "La creation du compte via le fournisseur externe a echoue.",
+}
+
 onMounted(() => {
   fetchSettings()
   if (state.loginHint) {
     email.value = state.loginHint
+  }
+  const code = (route.query.error as string) || ''
+  if (code) {
+    error.value = federationErrors[code] || `Erreur federation: ${code}`
   }
 })
 
@@ -44,16 +60,17 @@ function getFedIcon(p: FederationProviderInfo) {
   return iconMap[p.name.toLowerCase()] || IconSSOEnterprise
 }
 
-async function handleFederated(providerName: string) {
+function handleFederated(providerName: string) {
   loading.value = true
   error.value = null
-  const result = await apiGet<{ authorization_url: string }>(`/api/v1/auth/federation/${providerName}`)
-  if (result.ok && result.data.authorization_url) {
-    window.location.href = result.data.authorization_url
-  } else {
-    loading.value = false
-    error.value = result.ok ? 'Erreur de redirection.' : result.message
-  }
+  // The backend answers /api/v1/auth/federation/:provider with a 302 redirect
+  // to the external provider, so a same-origin XHR cannot follow it. Doing a
+  // full-page navigation lets the browser handle the cross-origin redirect.
+  const params = new URLSearchParams()
+  if (state.requestId) params.set('oauth_request_id', state.requestId)
+  const qs = params.toString()
+  const url = `/api/v1/auth/federation/${encodeURIComponent(providerName)}${qs ? `?${qs}` : ''}`
+  window.location.href = url
 }
 
 async function handleSubmit() {
