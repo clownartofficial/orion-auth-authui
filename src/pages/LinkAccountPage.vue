@@ -78,7 +78,7 @@ async function handleSubmit() {
             <input
               v-model="password"
               :type="showPassword ? 'text' : 'password'"
-              placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
+              placeholder="••••••••••••"
               required
               autofocus
             />
@@ -96,7 +96,7 @@ async function handleSubmit() {
 
         <button type="submit" class="v2-cta" :disabled="loading || !token">
           <span class="v2-cta__main">
-            {{ loading ? 'Verification\u2026' : 'Confirmer la liaison' }}
+            {{ loading ? 'Vérification…' : 'Confirmer la liaison' }}
             <IconChevron v-if="!loading" :size="14" />
           </span>
           <span class="v2-cta__kbd">&#9166; enter</span>

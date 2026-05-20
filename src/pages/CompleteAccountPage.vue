@@ -96,7 +96,7 @@ async function handleSubmit() {
 
     <div class="v2-card__body">
       <AuthAlert v-if="error" severity="danger">{{ error }}</AuthAlert>
-      <p v-if="loadingPreview" class="text-color-secondary text-[13px]">Verification du lien\u2026</p>
+      <p v-if="loadingPreview" class="text-color-secondary text-[13px]">Vérification du lien…</p>
 
       <form v-if="view" @submit.prevent="handleSubmit">
         <div class="v2-field">
@@ -121,7 +121,7 @@ async function handleSubmit() {
             <input
               v-model="password"
               :type="showPassword ? 'text' : 'password'"
-              placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
+              placeholder="••••••••••••"
               required
               autofocus
             />
@@ -143,7 +143,7 @@ async function handleSubmit() {
             <input
               v-model="confirmPassword"
               :type="showPassword ? 'text' : 'password'"
-              placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
+              placeholder="••••••••••••"
               required
             />
           </div>
@@ -151,7 +151,7 @@ async function handleSubmit() {
 
         <button type="submit" class="v2-cta" :disabled="loading">
           <span class="v2-cta__main">
-            {{ loading ? 'Creation\u2026' : 'Creer mon compte' }}
+            {{ loading ? 'Création…' : 'Créer mon compte' }}
             <IconChevron v-if="!loading" :size="14" />
           </span>
           <span class="v2-cta__kbd">&#9166; enter</span>
