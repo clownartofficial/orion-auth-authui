@@ -2,8 +2,11 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { apiGet, apiPost } from '@/composables/useApi'
+import { useRegistrationSchema, initialValues } from '@/composables/useRegistrationSchema'
+import { FIRST_CLASS_TARGETS } from '@/types/registrationField.types'
 import V2Card from '@/components/V2Card.vue'
 import AuthAlert from '@/components/AuthAlert.vue'
+import DynamicField from '@/components/DynamicField.vue'
 import { useTheme } from '@/composables/useTheme'
 import logoDark from '@/assets/logo-dark.svg'
 import logoLight from '@/assets/logo-light.svg'
@@ -33,6 +36,11 @@ const error = ref<string | null>(null)
 
 const { theme } = useTheme()
 const logoSrc = computed(() => theme.value === 'dark' ? logoDark : logoLight)
+const { schema, fetchSchema } = useRegistrationSchema('federation')
+const extras = ref<Record<string, unknown>>({})
+const renderedSchema = computed(() =>
+  schema.value.filter((f) => !(f.kind === 'standard' && f.standard_target && FIRST_CLASS_TARGETS.has(f.standard_target))),
+)
 
 onMounted(async () => {
   if (!token.value) {
@@ -40,16 +48,20 @@ onMounted(async () => {
     loadingPreview.value = false
     return
   }
-  const result = await apiGet<PendingSignupView>(
-    `/api/v1/auth/federation/pending-signup?token=${encodeURIComponent(token.value)}`,
-  )
+  const [preview] = await Promise.all([
+    apiGet<PendingSignupView>(
+      `/api/v1/auth/federation/pending-signup?token=${encodeURIComponent(token.value)}`,
+    ),
+    fetchSchema(),
+  ])
   loadingPreview.value = false
-  if (!result.ok) {
-    error.value = result.message || 'Token expire ou invalide.'
+  if (!preview.ok) {
+    error.value = preview.message || 'Token expire ou invalide.'
     return
   }
-  view.value = result.data
-  displayName.value = result.data.display_name || ''
+  view.value = preview.data
+  displayName.value = preview.data.display_name || ''
+  extras.value = initialValues(renderedSchema.value)
 })
 
 async function handleSubmit() {
@@ -65,6 +77,7 @@ async function handleSubmit() {
       token: token.value,
       password: password.value,
       display_name: displayName.value,
+      extra_fields: Object.keys(extras.value).length > 0 ? extras.value : undefined,
     },
   )
   loading.value = false
@@ -148,6 +161,13 @@ async function handleSubmit() {
             />
           </div>
         </div>
+
+        <DynamicField
+          v-for="field in renderedSchema"
+          :key="field.id"
+          :field="field"
+          v-model="extras[field.field_key]"
+        />
 
         <button type="submit" class="v2-cta" :disabled="loading">
           <span class="v2-cta__main">

@@ -3,13 +3,17 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { apiPost } from '@/composables/useApi'
 import { useSettings } from '@/composables/useSettings'
+import { useRegistrationSchema, initialValues } from '@/composables/useRegistrationSchema'
+import { FIRST_CLASS_TARGETS } from '@/types/registrationField.types'
 import V2Card from '@/components/V2Card.vue'
 import AuthAlert from '@/components/AuthAlert.vue'
+import DynamicField from '@/components/DynamicField.vue'
 import { IconEye, IconChevron } from '@/components/icons'
 
 const route = useRoute()
 const router = useRouter()
 const { registrationEnabled, fetchSettings } = useSettings()
+const { schema, fetchSchema } = useRegistrationSchema('register')
 
 const inviteToken = computed(() => route.query.invite as string | undefined)
 const inviteEmail = computed(() => route.query.email as string | undefined)
@@ -22,17 +26,27 @@ const confirmPassword = ref('')
 const loading = ref(false)
 const error = ref<string | null>(null)
 const success = ref(false)
+const extras = ref<Record<string, unknown>>({})
 
 const showPassword = ref(false)
 const showConfirm = ref(false)
 
+// The hardcoded displayName input already covers the display_name
+// standard target — hide the dynamic copy if the admin enabled it too.
+const renderedSchema = computed(() =>
+  schema.value.filter((f) => !(f.kind === 'standard' && f.standard_target && FIRST_CLASS_TARGETS.has(f.standard_target))),
+)
+
 onMounted(async () => {
-  if (!isInvite.value) {
-    await fetchSettings()
-    if (registrationEnabled.value === false) {
-      router.replace('/login')
-    }
+  await Promise.all([
+    isInvite.value ? Promise.resolve() : fetchSettings(),
+    fetchSchema(),
+  ])
+  if (!isInvite.value && registrationEnabled.value === false) {
+    router.replace('/login')
+    return
   }
+  extras.value = initialValues(renderedSchema.value)
 })
 
 async function handleSubmit() {
@@ -55,6 +69,7 @@ async function handleSubmit() {
       token: inviteToken.value,
       password: password.value,
       display_name: displayName.value || undefined,
+      extra_fields: Object.keys(extras.value).length > 0 ? extras.value : undefined,
     })
 
     loading.value = false
@@ -74,6 +89,7 @@ async function handleSubmit() {
       email: email.value,
       password: password.value,
       display_name: displayName.value || undefined,
+      extra_fields: Object.keys(extras.value).length > 0 ? extras.value : undefined,
     })
 
     loading.value = false
@@ -186,6 +202,13 @@ async function handleSubmit() {
               </button>
             </div>
           </div>
+
+          <DynamicField
+            v-for="field in renderedSchema"
+            :key="field.id"
+            :field="field"
+            v-model="extras[field.field_key]"
+          />
 
           <button type="submit" class="v2-cta" :disabled="loading">
             <span class="v2-cta__main">
