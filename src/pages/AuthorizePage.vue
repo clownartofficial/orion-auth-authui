@@ -4,6 +4,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { apiGet } from '../composables/useApi'
 import { useAuthState } from '../composables/useAuthState'
 import { performRedirect } from '../composables/useRedirect'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { IconSpinner } from '@/components/icons'
 
 const route = useRoute()
 const router = useRouter()
@@ -85,8 +87,10 @@ onMounted(async () => {
 <template>
   <div>
     <div class="flex flex-col items-center gap-4 py-8">
-      <ProgressSpinner v-if="loading && !error" />
-      <Message v-if="error" severity="error" :closable="false">{{ error }}</Message>
+      <IconSpinner v-if="loading && !error" :size="32" class="animate-spin text-accent" />
+      <Alert v-if="error" variant="destructive">
+        <AlertDescription>{{ error }}</AlertDescription>
+      </Alert>
     </div>
   </div>
 </template>
