@@ -104,16 +104,3 @@
   }
 }
 
-@layer components {
-  .p-button { font-family: var(--font-mono); font-size: 12px; font-weight: 500; border-radius: var(--r-md); }
-  .p-inputtext { font-family: var(--font-mono); font-size: 13px; border-radius: var(--r-md); padding: 10px 14px; }
-  .p-inputotp .p-inputtext { text-align: center; font-size: 18px; font-weight: 600; width: 48px; height: 48px; padding: 0; border-radius: var(--r-md); }
-  .p-card { border-radius: var(--r-lg); box-shadow: none; }
-  .p-card .p-card-body { padding: 32px; }
-  .p-message { border-radius: var(--r-md); font-family: var(--font-mono); font-size: 12px; }
-  .p-message-error, .p-message.p-message-error { background: var(--danger-bg); color: var(--danger); }
-  .p-message-success, .p-message.p-message-success { background: var(--success-bg); color: var(--success); }
-  .p-message-info, .p-message.p-message-info { background: var(--accent-bg); color: var(--accent); }
-  .p-toast .p-toast-message { border-radius: var(--r-md); font-family: var(--font-mono); font-size: 12px; }
-  .p-progress-spinner-circle { stroke: var(--accent); }
-}
