@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 import V2Card from '@/components/V2Card.vue'
 import { IconCheck, IconChevron } from '@/components/icons'
@@ -16,6 +16,23 @@ const frontchannelLogoutUris = computed(() => {
   if (Array.isArray(uris)) return uris.filter((u): u is string => typeof u === 'string')
   if (typeof uris === 'string') return uris.split(',').filter(Boolean)
   return []
+})
+
+// Auto-redirect after a short delay so the user sees the success state
+// before being sent back. The manual button remains as a fallback (slow
+// network, ad-blockers eating the redirect, JS disabled in fallback paths).
+const AUTO_REDIRECT_MS = 1200
+let redirectTimer: ReturnType<typeof setTimeout> | null = null
+
+onMounted(() => {
+  if (!redirectUri.value) return
+  redirectTimer = setTimeout(() => {
+    window.location.href = redirectUri.value as string
+  }, AUTO_REDIRECT_MS)
+})
+
+onBeforeUnmount(() => {
+  if (redirectTimer) clearTimeout(redirectTimer)
 })
 </script>
 
@@ -38,7 +55,8 @@ const frontchannelLogoutUris = computed(() => {
 
     <div class="v2-card__body">
       <p class="text-[13px] leading-[1.55] text-fg-2 text-center">
-        Vous avez ete deconnecte avec succes.
+        <template v-if="redirectUri">Redirection vers l'application&hellip;</template>
+        <template v-else>Vous avez ete deconnecte avec succes.</template>
       </p>
     </div>
 
