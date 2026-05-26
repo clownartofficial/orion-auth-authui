@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import { apiPost } from '@/composables/useApi'
 import V2Card from '@/components/V2Card.vue'
 import AuthAlert from '@/components/AuthAlert.vue'
+import PasswordStrength from '@/components/PasswordStrength.vue'
 import { IconEye, IconChevron } from '@/components/icons'
 
 const route = useRoute()
@@ -16,12 +17,13 @@ const showConfirm = ref(false)
 const loading = ref(false)
 const error = ref<string | null>(null)
 const success = ref(false)
+const passwordValid = ref(false)
 
 async function handleSubmit() {
   error.value = null
 
-  if (password.value.length < 8) {
-    error.value = 'Le mot de passe doit contenir au moins 8 caracteres.'
+  if (!passwordValid.value) {
+    error.value = 'Le mot de passe ne respecte pas la politique de securite.'
     return
   }
 
@@ -52,7 +54,7 @@ async function handleSubmit() {
   <V2Card path="auth.orion.io / <b>reset</b>">
     <div class="v2-card__head">
       <h1 class="v2-card__title">Nouveau mot de passe</h1>
-      <p class="v2-card__sub">Votre nouveau mot de passe doit contenir au moins 8 caracteres.</p>
+      <p class="v2-card__sub">Choisissez un nouveau mot de passe qui respecte les regles ci-dessous.</p>
     </div>
 
     <div class="v2-card__body">
@@ -76,7 +78,7 @@ async function handleSubmit() {
               <input
                 v-model="password"
                 :type="showPassword ? 'text' : 'password'"
-                placeholder="8 caracteres minimum"
+                placeholder="Nouveau mot de passe"
                 required
                 autofocus
               />
@@ -90,6 +92,10 @@ async function handleSubmit() {
                 <IconEye :size="15" :off="showPassword" />
               </button>
             </div>
+            <PasswordStrength
+              :password="password"
+              @update:valid="passwordValid = $event"
+            />
           </div>
 
           <div class="v2-field">
@@ -113,7 +119,7 @@ async function handleSubmit() {
             </div>
           </div>
 
-          <button type="submit" class="v2-cta" :disabled="loading">
+          <button type="submit" class="v2-cta" :disabled="loading || !passwordValid">
             <span class="v2-cta__main">
               {{ loading ? 'Reinitialisation...' : 'Reinitialiser' }}
               <IconChevron v-if="!loading" :size="14" />

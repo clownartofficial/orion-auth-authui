@@ -7,6 +7,7 @@ import { FIRST_CLASS_TARGETS } from '@/types/registrationField.types'
 import V2Card from '@/components/V2Card.vue'
 import AuthAlert from '@/components/AuthAlert.vue'
 import DynamicField from '@/components/DynamicField.vue'
+import PasswordStrength from '@/components/PasswordStrength.vue'
 import { useTheme } from '@/composables/useTheme'
 import logoDark from '@/assets/logo-dark.svg'
 import logoLight from '@/assets/logo-light.svg'
@@ -33,6 +34,7 @@ const showPassword = ref(false)
 const loading = ref(false)
 const loadingPreview = ref(true)
 const error = ref<string | null>(null)
+const passwordValid = ref(false)
 
 const { theme } = useTheme()
 const logoSrc = computed(() => theme.value === 'dark' ? logoDark : logoLight)
@@ -66,6 +68,10 @@ onMounted(async () => {
 
 async function handleSubmit() {
   error.value = null
+  if (!passwordValid.value) {
+    error.value = 'Le mot de passe ne respecte pas la politique de securite.'
+    return
+  }
   if (password.value !== confirmPassword.value) {
     error.value = 'Les deux mots de passe ne correspondent pas.'
     return
@@ -148,6 +154,12 @@ async function handleSubmit() {
               {{ showPassword ? 'masquer' : 'afficher' }}
             </button>
           </div>
+          <PasswordStrength
+            v-if="view"
+            :password="password"
+            :user-inputs="[view.email, displayName]"
+            @update:valid="passwordValid = $event"
+          />
         </div>
 
         <div class="v2-field">
@@ -169,7 +181,7 @@ async function handleSubmit() {
           v-model="extras[field.field_key]"
         />
 
-        <button type="submit" class="v2-cta" :disabled="loading">
+        <button type="submit" class="v2-cta" :disabled="loading || !passwordValid">
           <span class="v2-cta__main">
             {{ loading ? 'Création…' : 'Créer mon compte' }}
             <IconChevron v-if="!loading" :size="14" />

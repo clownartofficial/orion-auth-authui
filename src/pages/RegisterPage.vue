@@ -8,6 +8,7 @@ import { FIRST_CLASS_TARGETS } from '@/types/registrationField.types'
 import V2Card from '@/components/V2Card.vue'
 import AuthAlert from '@/components/AuthAlert.vue'
 import DynamicField from '@/components/DynamicField.vue'
+import PasswordStrength from '@/components/PasswordStrength.vue'
 import { IconEye, IconChevron } from '@/components/icons'
 
 const route = useRoute()
@@ -30,6 +31,7 @@ const extras = ref<Record<string, unknown>>({})
 
 const showPassword = ref(false)
 const showConfirm = ref(false)
+const passwordValid = ref(false)
 
 // The hardcoded displayName input already covers the display_name
 // standard target — hide the dynamic copy if the admin enabled it too.
@@ -52,8 +54,8 @@ onMounted(async () => {
 async function handleSubmit() {
   error.value = null
 
-  if (password.value.length < 8) {
-    error.value = 'Le mot de passe doit contenir au moins 8 caracteres.'
+  if (!passwordValid.value) {
+    error.value = 'Le mot de passe ne respecte pas la politique de securite.'
     return
   }
 
@@ -167,7 +169,7 @@ async function handleSubmit() {
               <input
                 v-model="password"
                 :type="showPassword ? 'text' : 'password'"
-                placeholder="8 caracteres minimum"
+                placeholder="Choisissez un mot de passe"
                 required
               />
               <button
@@ -180,6 +182,11 @@ async function handleSubmit() {
                 <IconEye :size="15" :off="showPassword" />
               </button>
             </div>
+            <PasswordStrength
+              :password="password"
+              :user-inputs="[email, displayName]"
+              @update:valid="passwordValid = $event"
+            />
           </div>
 
           <div class="v2-field">
@@ -210,7 +217,7 @@ async function handleSubmit() {
             v-model="extras[field.field_key]"
           />
 
-          <button type="submit" class="v2-cta" :disabled="loading">
+          <button type="submit" class="v2-cta" :disabled="loading || !passwordValid">
             <span class="v2-cta__main">
               {{ loading ? 'Creation en cours...' : 'Creer le compte' }}
               <IconChevron v-if="!loading" :size="14" />
