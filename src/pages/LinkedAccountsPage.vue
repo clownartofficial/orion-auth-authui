@@ -35,14 +35,6 @@ const variant = computed<Variant>(() => {
       }
   }
 })
-
-function goBack() {
-  if (window.history.length > 1) {
-    window.history.back()
-    return
-  }
-  window.close()
-}
 </script>
 
 <template>
@@ -54,10 +46,9 @@ function goBack() {
 
     <div class="v2-card__body">
       <AuthAlert :severity="variant.severity">{{ variant.message }}</AuthAlert>
-    </div>
-
-    <div class="v2-card__foot">
-      <a href="#" @click.prevent="goBack">Retour</a>
+      <p class="text-[13px] leading-[1.55] text-fg-2 text-center" style="margin-top: 12px">
+        Vous pouvez fermer cet onglet en toute securite.
+      </p>
     </div>
   </V2Card>
 </template>
