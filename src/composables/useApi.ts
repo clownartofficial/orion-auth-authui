@@ -1,6 +1,6 @@
 export type ApiResult<T> =
   | { ok: true; data: T }
-  | { ok: false; status: number; message: string }
+  | { ok: false; status: number; message: string; code?: string }
 
 export async function apiGet<T>(path: string, params?: Record<string, string>): Promise<ApiResult<T>> {
   try {
@@ -13,7 +13,7 @@ export async function apiGet<T>(path: string, params?: Record<string, string>): 
     const response = await fetch(url.toString())
     if (!response.ok) {
       const body = await response.json().catch(() => ({}))
-      return { ok: false, status: response.status, message: extractErrorMessage(body) || response.statusText }
+      return { ok: false, status: response.status, message: extractErrorMessage(body) || response.statusText, code: extractErrorCode(body) }
     }
     const data = await response.json()
     return { ok: true, data }
@@ -31,7 +31,7 @@ export async function apiPost<T>(path: string, body?: unknown): Promise<ApiResul
     })
     if (!response.ok) {
       const body = await response.json().catch(() => ({}))
-      return { ok: false, status: response.status, message: extractErrorMessage(body) || response.statusText }
+      return { ok: false, status: response.status, message: extractErrorMessage(body) || response.statusText, code: extractErrorCode(body) }
     }
     const data = await response.json()
     return { ok: true, data }
@@ -59,4 +59,20 @@ function extractErrorMessage(body: unknown): string | null {
   if (typeof b.error === 'string' && b.error) return b.error
   if (typeof b.message === 'string' && b.message) return b.message
   return null
+}
+
+// extractErrorCode pulls the machine-readable error code from the body so the
+// caller can branch on stable identifiers (e.g. "email_not_verified") rather
+// than the human-readable message. Matches the two server shapes used:
+//   App errors  → { error: { code: "...", message: "..." } }
+//   OAuth2      → { error: "access_denied", ... }
+function extractErrorCode(body: unknown): string | undefined {
+  if (!body || typeof body !== 'object') return undefined
+  const b = body as Record<string, unknown>
+  if (b.error && typeof b.error === 'object') {
+    const err = b.error as { code?: unknown }
+    if (typeof err.code === 'string' && err.code) return err.code
+  }
+  if (typeof b.error === 'string' && b.error) return b.error
+  return undefined
 }

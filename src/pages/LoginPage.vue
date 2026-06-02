@@ -24,6 +24,9 @@ const rememberMe = ref(false)
 const showPassword = ref(false)
 const loading = ref(false)
 const error = ref<string | null>(null)
+const needsEmailVerification = ref(false)
+const resendingVerification = ref(false)
+const verificationResent = ref(false)
 
 const clientName = computed(() => state.clientName || 'OrionAuth')
 
@@ -74,8 +77,21 @@ function handleFederated(providerName: string) {
   window.location.href = url
 }
 
+async function resendVerification() {
+  if (!email.value || resendingVerification.value) return
+  resendingVerification.value = true
+  await apiPost('/api/v1/auth/resend-verification', {
+    email: email.value,
+    oauth_request_id: state.requestId || undefined,
+  })
+  resendingVerification.value = false
+  verificationResent.value = true
+}
+
 async function handleSubmit() {
   error.value = null
+  needsEmailVerification.value = false
+  verificationResent.value = false
   loading.value = true
 
   const result = await apiPost<{
@@ -91,6 +107,12 @@ async function handleSubmit() {
   loading.value = false
 
   if (!result.ok) {
+    // Email-not-verified is a recoverable state: render a banner with a
+    // resend button rather than the generic error message.
+    if (result.code === 'email_not_verified') {
+      needsEmailVerification.value = true
+      return
+    }
     // Prefer the server-side message (OAuth error_description, AppError message,
     // etc.) — it conveys policy denial reasons, lockout details, etc. Fall back
     // to a generic localized hint only when the server gave us nothing useful.
@@ -131,6 +153,32 @@ async function handleSubmit() {
     <!-- Body -->
     <div class="v2-card__body">
       <AuthAlert v-if="error" severity="danger">{{ error }}</AuthAlert>
+
+      <template v-if="needsEmailVerification">
+        <AuthAlert severity="warn">
+          <template v-if="verificationResent">
+            Un nouveau lien de verification a ete envoye a <strong>{{ email }}</strong>.
+            Pensez a verifier vos spams.
+          </template>
+          <template v-else>
+            Votre adresse <strong>{{ email }}</strong> n'est pas encore verifiee.
+            Cliquez sur le lien recu par email pour activer votre compte.
+          </template>
+        </AuthAlert>
+        <div style="margin-top: 12px; display: flex; gap: 8px;">
+          <button
+            type="button"
+            class="v2-cta v2-cta--ghost"
+            :disabled="resendingVerification || verificationResent"
+            @click="resendVerification"
+            style="flex: 1"
+          >
+            <span class="v2-cta__main">
+              {{ verificationResent ? 'Lien envoye' : (resendingVerification ? 'Envoi...' : 'Renvoyer le lien') }}
+            </span>
+          </button>
+        </div>
+      </template>
 
       <form @submit.prevent="handleSubmit">
         <div class="v2-field">
