@@ -76,6 +76,14 @@ onMounted(async () => {
 
   setFromAuthorizeResponse(result.data)
 
+  // OIDC prompt=create (Initiating User Registration via OIDC 1.0): the
+  // client wants the signup UX, not the login form. Route accordingly so the
+  // RegisterPage knows to POST to /authorize/register with the request_id.
+  if (result.data.prompt === 'create') {
+    router.push('/register')
+    return
+  }
+
   if (result.data.requires_login) {
     router.push('/login')
   } else if (result.data.requires_consent) {

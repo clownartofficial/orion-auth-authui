@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { apiGet, apiPost } from '@/composables/useApi'
+import { useAuthState } from '@/composables/useAuthState'
 import { useSettings } from '@/composables/useSettings'
 import { useRegistrationSchema, initialValues } from '@/composables/useRegistrationSchema'
 import { FIRST_CLASS_TARGETS } from '@/types/registrationField.types'
@@ -14,6 +15,13 @@ import { IconEye, IconChevron } from '@/components/icons'
 const route = useRoute()
 const router = useRouter()
 const { registrationEnabled, postRegisterRedirectUrl, fetchSettings } = useSettings()
+const { state: authState } = useAuthState()
+
+// OAuth signup flow (prompt=create) — when the user reached /register
+// through /authorize?prompt=create, AuthorizePage stashed the request_id
+// in authState. The submit path then targets /authorize/register and the
+// success state shows "verify your email" without redirecting to a URL.
+const isOAuthSignup = computed(() => !!authState.requestId)
 const { schema, fetchSchema } = useRegistrationSchema('register')
 
 const inviteToken = computed(() => route.query.invite as string | undefined)
@@ -105,6 +113,25 @@ async function handleSubmit() {
       }
       return
     }
+  } else if (isOAuthSignup.value) {
+    const result = await apiPost('/authorize/register', {
+      request_id: authState.requestId,
+      email: email.value,
+      password: password.value,
+      display_name: displayName.value || undefined,
+      extra_fields: Object.keys(extras.value).length > 0 ? extras.value : undefined,
+    })
+
+    loading.value = false
+
+    if (!result.ok) {
+      if (result.status === 409) {
+        error.value = 'Un compte existe deja avec cet email.'
+      } else {
+        error.value = result.message
+      }
+      return
+    }
   } else {
     const result = await apiPost('/api/v1/auth/register', {
       email: email.value,
@@ -129,6 +156,11 @@ async function handleSubmit() {
 
   success.value = true
 
+  // OAuth signup (prompt=create): success means the user record exists but
+  // the session is NOT open yet — the auto-login happens when the user
+  // clicks the verify-email link. No redirect from here.
+  if (isOAuthSignup.value) return
+
   // After a standalone register (no OAuth flow), if the operator
   // configured a landing URL we send the user there. Invite-driven
   // registers keep the "Se connecter" link instead because they don't
@@ -145,7 +177,11 @@ async function handleSubmit() {
   <V2Card path="auth.orion.io / <b>register</b>">
     <div class="v2-card__head">
       <h1 class="v2-card__title">
-        {{ isInvite ? 'Finaliser votre invitation' : 'Creer un compte' }}
+        <template v-if="isInvite">Finaliser votre invitation</template>
+        <template v-else-if="isOAuthSignup">
+          Creer un compte pour <em>{{ authState.clientName || 'cette application' }}</em>
+        </template>
+        <template v-else>Creer un compte</template>
       </h1>
       <p class="v2-card__sub">
         <template v-if="isInvite && inviteEmail">
@@ -165,6 +201,10 @@ async function handleSubmit() {
         <AuthAlert severity="success">
           <template v-if="isInvite">
             Compte cree avec succes. Vous pouvez maintenant vous connecter.
+          </template>
+          <template v-else-if="isOAuthSignup">
+            Compte cree. Cliquez sur le lien recu par email pour finaliser
+            votre inscription et acceder a l'application.
           </template>
           <template v-else>
             Compte cree avec succes. Verifiez votre email pour activer votre compte.
