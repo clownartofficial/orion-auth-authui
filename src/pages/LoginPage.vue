@@ -20,6 +20,7 @@ const { registrationEnabled, federationProviders, fetchSettings } = useSettings(
 
 const email = ref('')
 const password = ref('')
+const rememberMe = ref(false)
 const showPassword = ref(false)
 const loading = ref(false)
 const error = ref<string | null>(null)
@@ -84,6 +85,7 @@ async function handleSubmit() {
     request_id: state.requestId,
     email: email.value,
     password: password.value,
+    remember_me: rememberMe.value,
   })
 
   loading.value = false
@@ -171,6 +173,15 @@ async function handleSubmit() {
             </button>
           </div>
         </div>
+
+        <label class="flex items-center gap-2 text-[12px] text-fg-2 cursor-pointer mb-3 select-none">
+          <input
+            type="checkbox"
+            v-model="rememberMe"
+            class="h-3.5 w-3.5 accent-accent cursor-pointer"
+          />
+          Se souvenir de moi sur cet appareil
+        </label>
 
         <button type="submit" class="v2-cta" :disabled="loading">
           <span class="v2-cta__main">
