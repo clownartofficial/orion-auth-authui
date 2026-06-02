@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { apiPost } from '@/composables/useApi'
+import { apiGet, apiPost } from '@/composables/useApi'
 import { useSettings } from '@/composables/useSettings'
 import { useRegistrationSchema, initialValues } from '@/composables/useRegistrationSchema'
 import { FIRST_CLASS_TARGETS } from '@/types/registrationField.types'
@@ -17,11 +17,14 @@ const { registrationEnabled, fetchSettings } = useSettings()
 const { schema, fetchSchema } = useRegistrationSchema('register')
 
 const inviteToken = computed(() => route.query.invite as string | undefined)
-const inviteEmail = computed(() => route.query.email as string | undefined)
 const isInvite = computed(() => !!inviteToken.value)
 
+const inviteEmail = ref<string | null>(null)
+const inviteInvalid = ref(false)
+const inviteResolving = ref(false)
+
 const displayName = ref('')
-const email = ref(inviteEmail.value ?? '')
+const email = ref('')
 const password = ref('')
 const confirmPassword = ref('')
 const loading = ref(false)
@@ -41,7 +44,7 @@ const renderedSchema = computed(() =>
 
 onMounted(async () => {
   await Promise.all([
-    isInvite.value ? Promise.resolve() : fetchSettings(),
+    isInvite.value ? resolveInvite() : fetchSettings(),
     fetchSchema(),
   ])
   if (!isInvite.value && registrationEnabled.value === false) {
@@ -50,6 +53,22 @@ onMounted(async () => {
   }
   extras.value = initialValues(renderedSchema.value)
 })
+
+async function resolveInvite() {
+  if (!inviteToken.value) return
+  inviteResolving.value = true
+  const result = await apiGet<{ email: string; expires_at: string }>(
+    '/api/v1/auth/invitations/lookup',
+    { token: inviteToken.value },
+  )
+  inviteResolving.value = false
+  if (!result.ok) {
+    inviteInvalid.value = true
+    return
+  }
+  inviteEmail.value = result.data.email
+  email.value = result.data.email
+}
 
 async function handleSubmit() {
   error.value = null
@@ -119,7 +138,15 @@ async function handleSubmit() {
         {{ isInvite ? 'Finaliser votre invitation' : 'Creer un compte' }}
       </h1>
       <p class="v2-card__sub">
-        {{ isInvite ? 'Completez votre profil pour activer votre compte.' : 'Remplissez les informations ci-dessous.' }}
+        <template v-if="isInvite && inviteEmail">
+          Invitation pour <strong>{{ inviteEmail }}</strong>
+        </template>
+        <template v-else-if="isInvite">
+          Completez votre profil pour activer votre compte.
+        </template>
+        <template v-else>
+          Remplissez les informations ci-dessous.
+        </template>
       </p>
     </div>
 
@@ -133,6 +160,17 @@ async function handleSubmit() {
             Compte cree avec succes. Verifiez votre email pour activer votre compte.
           </template>
         </AuthAlert>
+      </template>
+
+      <template v-else-if="inviteInvalid">
+        <AuthAlert severity="danger">
+          Cette invitation est invalide ou a expire. Contactez un administrateur
+          pour en recevoir une nouvelle.
+        </AuthAlert>
+      </template>
+
+      <template v-else-if="isInvite && inviteResolving">
+        <p class="text-[13px] text-fg-2 text-center">Verification de l'invitation...</p>
       </template>
 
       <template v-else>
@@ -150,14 +188,13 @@ async function handleSubmit() {
             </div>
           </div>
 
-          <div class="v2-field">
+          <div v-if="!isInvite" class="v2-field">
             <label class="v2-field__label">Email</label>
             <div class="v2-input-wrap">
               <input
                 v-model="email"
                 type="email"
                 placeholder="vous@exemple.com"
-                :disabled="isInvite"
                 required
               />
             </div>
