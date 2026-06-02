@@ -39,6 +39,10 @@ const router = createRouter({
       component: () => import('../pages/VerifyEmailPage.vue'),
     },
     {
+      path: '/verify-email/success',
+      component: () => import('../pages/VerifyEmailPage.vue'),
+    },
+    {
       path: '/device',
       component: () => import('../pages/DevicePage.vue'),
     },
