@@ -13,7 +13,7 @@ import { IconEye, IconChevron } from '@/components/icons'
 
 const route = useRoute()
 const router = useRouter()
-const { registrationEnabled, fetchSettings } = useSettings()
+const { registrationEnabled, postRegisterRedirectUrl, fetchSettings } = useSettings()
 const { schema, fetchSchema } = useRegistrationSchema('register')
 
 const inviteToken = computed(() => route.query.invite as string | undefined)
@@ -128,6 +128,16 @@ async function handleSubmit() {
   }
 
   success.value = true
+
+  // After a standalone register (no OAuth flow), if the operator
+  // configured a landing URL we send the user there. Invite-driven
+  // registers keep the "Se connecter" link instead because they don't
+  // usually originate from a SPA.
+  if (!isInvite.value && postRegisterRedirectUrl.value) {
+    setTimeout(() => {
+      window.location.href = postRegisterRedirectUrl.value
+    }, 1500)
+  }
 }
 </script>
 

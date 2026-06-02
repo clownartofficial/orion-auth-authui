@@ -10,10 +10,12 @@ export interface FederationProviderInfo {
 interface SettingsResponse {
   registration_enabled: boolean
   federation_providers?: FederationProviderInfo[]
+  default_post_register_redirect_url?: string
 }
 
 const registrationEnabled = ref<boolean | null>(null)
 const federationProviders = ref<FederationProviderInfo[]>([])
+const postRegisterRedirectUrl = ref<string>('')
 const loaded = ref(false)
 
 export function useSettings() {
@@ -24,12 +26,14 @@ export function useSettings() {
     if (result.ok) {
       registrationEnabled.value = result.data.registration_enabled
       federationProviders.value = result.data.federation_providers || []
+      postRegisterRedirectUrl.value = result.data.default_post_register_redirect_url || ''
     } else {
       registrationEnabled.value = true
       federationProviders.value = []
+      postRegisterRedirectUrl.value = ''
     }
     loaded.value = true
   }
 
-  return { registrationEnabled, federationProviders, fetchSettings }
+  return { registrationEnabled, federationProviders, postRegisterRedirectUrl, fetchSettings }
 }
