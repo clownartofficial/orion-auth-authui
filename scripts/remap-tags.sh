@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
-# remap-tags.sh — Remap 27 chaotic historical tags onto a SemVer-by-content
-# scheme. See VERSIONING.md and the [v0.12.0] section of CHANGELOG.md for
+# remap-tags.sh — Remap 38 chaotic historical tags onto a SemVer-by-content
+# scheme. See VERSIONING.md and the [v0.19.0] section of CHANGELOG.md for
 # the why.
 #
 # The mapping is hard-coded below for auditability — every (old, sha, new)
@@ -49,6 +49,17 @@ MAPPING=(
   "0.2.5-pre12|14b658d|v0.11.0"
   "0.2.5-pre13|287df77|v0.11.1"
   "0.2.5-pre14|94babc9|v0.11.2"
+  "0.2.6-pre1|b0d5143|v0.12.0"
+  "0.2.6-pre2|86d96b2|v0.13.0"
+  "0.2.6-pre3|a85edf7|v0.13.1"
+  "0.2.7-pre1|f2f9b3b|v0.14.0"
+  "0.2.7-pre2|a2706f1|v0.15.0"
+  "0.2.7-pre3|ab2431f|v0.15.1"
+  "0.2.7-pre4|bfec5ed|v0.16.0"
+  "0.2.7-pre5|8e272d6|v0.17.0"
+  "0.2.7-pre6|63ae60e|v0.17.1"
+  "0.2.7-pre7|36779db|v0.18.0"
+  "0.2.7-pre8|3d3d68d|v0.19.0"
 )
 
 mode="${1:-}"

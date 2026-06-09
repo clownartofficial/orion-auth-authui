@@ -34,7 +34,7 @@ either ship the final `v0.42.0` or cut `v0.42.0-rc.2`".
 
 It is **not** a synonym for "I'm pushing a commit to staging". A push-by-push
 prerelease cadence was the failure mode of the legacy `-pre*` / `-hf*` tags
-(see [CHANGELOG.md](CHANGELOG.md) `v0.12.0` notes). The CI tag-format gate
+(see [CHANGELOG.md](CHANGELOG.md) `v0.19.0` notes). The CI tag-format gate
 in `.forgejo/workflows/tag-format.yml` enforces the regex
 `^v[0-9]+\.[0-9]+\.[0-9]+(-rc\.[0-9]+)?$` and rejects anything else.
 
