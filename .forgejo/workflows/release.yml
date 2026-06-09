@@ -1,3 +1,8 @@
+# Triggered by Forgejo releases. Tag names follow the SemVer policy
+# documented in VERSIONING.md: vX.Y.Z for stable, vX.Y.Z-rc.N for an
+# explicit release-candidate cut. The tag-format workflow rejects
+# anything else before it can produce a release.
+
 name: Build and Push Docker Image
 
 on:
