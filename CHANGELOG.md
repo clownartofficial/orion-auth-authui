@@ -9,6 +9,16 @@ adheres to [Semantic Versioning](https://semver.org) — see
 
 —
 
+## [v0.19.1] — 2026-07-06
+
+### Changed
+
+- **Dependencies updated.** In-range bumps (vue, vite, tailwind, vue-router
+  5.1, typescript, vue-tsc, …) plus majors: `@types/node` v26 and `zxcvbn` v4.
+  The zxcvbn v4 core replaces the `zxcvbnOptions`/`zxcvbn` singleton with a
+  `ZxcvbnFactory` instance — `src/lib/zxcvbn.ts` migrated accordingly.
+  Type-check and build pass.
+
 ## [v0.19.0] — 2026-06-09
 
 First release under the new SemVer-by-content tagging policy. All 38
@@ -95,5 +105,6 @@ rewritten. A high-level summary of the lines:
 - **`v0.16.0..v0.18.0`** — live password strength meter + `/linked-accounts`
   result page + remember-me checkbox.
 
-[Unreleased]: https://git.nhsoul.fr/nhpro/orion-auth-authui/compare/v0.19.0...HEAD
+[Unreleased]: https://git.nhsoul.fr/nhpro/orion-auth-authui/compare/v0.19.1...HEAD
+[v0.19.1]: https://git.nhsoul.fr/nhpro/orion-auth-authui/releases/tag/v0.19.1
 [v0.19.0]: https://git.nhsoul.fr/nhpro/orion-auth-authui/releases/tag/v0.19.0
