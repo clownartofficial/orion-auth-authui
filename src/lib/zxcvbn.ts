@@ -14,7 +14,7 @@ export function getZxcvbnCheck(): Promise<CheckFn> {
         import('@zxcvbn-ts/language-common'),
         import('@zxcvbn-ts/language-en'),
       ])
-      core.zxcvbnOptions.setOptions({
+      const zxcvbn = new core.ZxcvbnFactory({
         dictionary: {
           ...common.dictionary,
           ...en.dictionary,
@@ -23,7 +23,7 @@ export function getZxcvbnCheck(): Promise<CheckFn> {
         useLevenshteinDistance: true,
         translations: en.translations,
       })
-      return core.zxcvbn
+      return (password, userInputs) => zxcvbn.check(password, userInputs)
     })()
   }
   return checkPromise
