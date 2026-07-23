@@ -1,54 +1,53 @@
-/* OrionAuth — Auth flow styles (only what Tailwind can't do) */
+/* OrionAuth — Auth flow styles (Clown.School direction) */
 
 /* ── Shared input style ─────────────────────────────────────── */
 .input {
   width: 100%;
-  padding: 11px 12px;
-  font-size: 14px;
+  padding: 12px 14px;
+  font-size: 15px;
   font-family: var(--font-sans);
   color: var(--fg-0);
-  background: var(--bg-inset);
+  background: var(--bg-1);
   border: 1px solid var(--border);
   border-radius: var(--r-md);
-  transition: all 120ms cubic-bezier(0.2, 0, 0, 1);
+  transition: all 200ms ease;
 }
 .input::placeholder { color: var(--fg-3); }
 .input:focus {
   outline: none;
   border-color: var(--accent);
-  background: var(--bg-0);
+  background: var(--bg-1);
   box-shadow: 0 0 0 3px var(--accent-bg);
 }
 .input:disabled {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
 /* ── Primary action button ──────────────────────────────────── */
 .auth-btn {
   width: 100%;
-  padding: 12px 14px;
+  padding: 13px 16px;
   border-radius: var(--r-md);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   border: none;
   background: var(--accent);
-  color: oklch(0.15 0.02 285);
+  color: #ffffff;
   cursor: pointer;
-  transition: all 120ms cubic-bezier(0.2, 0, 0, 1);
+  transition: all 200ms ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   font-family: inherit;
 }
-[data-theme="light"] .auth-btn { color: white; }
 .auth-btn:hover {
   background: var(--accent-hi);
-  box-shadow: 0 8px 20px -8px var(--accent);
+  box-shadow: var(--shadow-lg);
   transform: translateY(-1px);
 }
-.auth-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+.auth-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
 
 /* ── Secondary button (federated, etc.) ─────────────────────── */
 .fed-btn {
@@ -56,20 +55,21 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px 12px;
+  padding: 11px 14px;
   background: var(--bg-1);
   border: 1px solid var(--border);
   border-radius: var(--r-md);
   color: var(--fg-0);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 120ms cubic-bezier(0.2, 0, 0, 1);
+  transition: all 200ms ease;
   font-family: inherit;
 }
 .fed-btn:hover {
   background: var(--bg-2);
-  border-color: var(--border-strong);
+  border-color: var(--accent);
+  color: var(--accent);
   transform: translateY(-1px);
 }
 .fed-btn svg { flex-shrink: 0; }
@@ -80,17 +80,16 @@
   align-items: center;
   gap: 12px;
   margin: 22px 0;
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
   color: var(--fg-3);
 }
 .auth-divider::before, .auth-divider::after {
   content: '';
   flex: 1;
   height: 1px;
-  background: var(--border-subtle);
+  background: var(--border);
 }
 
 /* ── OTP digit inputs ───────────────────────────────────────── */
@@ -98,49 +97,50 @@
   width: 48px;
   height: 56px;
   text-align: center;
-  font-family: var(--font-mono);
-  font-size: 22px;
-  font-weight: 600;
+  font-family: var(--font-rounded);
+  font-size: 24px;
+  font-weight: 700;
   color: var(--fg-0);
-  background: var(--bg-inset);
+  background: var(--bg-1);
   border: 1px solid var(--border);
   border-radius: var(--r-md);
-  transition: all 120ms cubic-bezier(0.2, 0, 0, 1);
+  transition: all 200ms ease;
 }
 .otp-digit:focus {
   outline: none;
   border-color: var(--accent);
-  background: var(--bg-0);
+  background: var(--bg-1);
   box-shadow: 0 0 0 3px var(--accent-bg);
   transform: translateY(-1px);
 }
 .otp-digit--filled {
   border-color: var(--accent);
   background: var(--accent-bg);
+  color: var(--accent);
 }
 
-/* ── Alert boxes ────────────────────────────────────────────── */
+/* ── Alert boxes (border-left accent, Clown style) ──────────── */
 .alert {
   display: flex;
   gap: 10px;
-  padding: 10px 12px;
-  border-radius: var(--r-md);
-  font-size: 12.5px;
+  padding: 12px 14px;
+  border-radius: var(--r-sm);
+  font-size: 14px;
   background: var(--info-bg);
   color: var(--info);
-  border: 1px solid transparent;
+  border-left: 4px solid var(--info);
   margin-bottom: 14px;
 }
-.alert--warn { background: var(--warn-bg); color: var(--warn); }
-.alert--danger { background: var(--danger-bg); color: var(--danger); }
-.alert--success { background: var(--success-bg); color: var(--success); }
+.alert--warn { background: var(--warn-bg); color: var(--warn); border-left-color: var(--warn); }
+.alert--danger { background: var(--danger-bg); color: var(--danger); border-left-color: var(--danger); }
+.alert--success { background: var(--success-bg); color: var(--success); border-left-color: var(--success); }
 .alert svg { flex-shrink: 0; margin-top: 1px; }
 .alert__body { line-height: 1.55; }
 .alert__body strong { display: block; margin-bottom: 2px; }
 
 /* ── Device / info card ─────────────────────────────────────── */
 .device-card {
-  background: var(--bg-1);
+  background: var(--bg-2);
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   padding: 20px;
@@ -149,25 +149,25 @@
 .device-kv {
   display: flex;
   justify-content: space-between;
-  padding: 7px 0;
-  font-size: 12.5px;
-  border-top: 1px solid var(--border-subtle);
+  padding: 8px 0;
+  font-size: 13px;
+  border-top: 1px solid var(--border);
 }
 .device-kv:first-child { border-top: none; }
-.device-kv__k { color: var(--fg-2); font-family: var(--font-mono); font-size: 11px; }
-.device-kv__v { color: var(--fg-0); font-family: var(--font-mono); font-size: 11.5px; }
-.device-kv__v--accent { color: var(--accent); }
+.device-kv__k { color: var(--fg-2); font-size: 13px; }
+.device-kv__v { color: var(--fg-0); font-size: 13px; font-weight: 500; }
+.device-kv__v--accent { color: var(--accent); font-weight: 600; }
 
 /* ── Passkey / WebAuthn orb animation ───────────────────────── */
 .passkey-orb {
   width: 88px;
   height: 88px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, var(--accent-hi), var(--accent-lo));
+  background: radial-gradient(circle at 35% 30%, var(--accent-lo), var(--accent));
   box-shadow:
-    0 0 40px var(--accent),
-    0 0 80px var(--accent-bg),
-    inset 0 0 20px rgba(255, 255, 255, 0.2);
+    0 0 40px var(--accent-bg),
+    0 12px 30px -8px rgba(217, 35, 42, 0.4),
+    inset 0 0 20px rgba(255, 255, 255, 0.25);
   display: grid;
   place-items: center;
   color: white;
@@ -175,21 +175,21 @@
   animation: passkey-pulse 2.4s ease-in-out infinite;
 }
 @keyframes passkey-pulse {
-  0%, 100% { transform: scale(1); box-shadow: 0 0 40px var(--accent), 0 0 80px var(--accent-bg); }
-  50% { transform: scale(1.04); box-shadow: 0 0 55px var(--accent), 0 0 100px var(--accent-bg); }
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
 }
 .passkey-orb::before, .passkey-orb::after {
   content: '';
   position: absolute;
-  border: 1px solid var(--accent);
+  border: 2px solid var(--accent);
   border-radius: 50%;
   inset: -12px;
-  opacity: 0.4;
+  opacity: 0.3;
   animation: passkey-ring 2.4s ease-out infinite;
 }
 .passkey-orb::after { animation-delay: 1.2s; }
 @keyframes passkey-ring {
-  0% { transform: scale(0.8); opacity: 0.6; }
+  0% { transform: scale(0.8); opacity: 0.5; }
   100% { transform: scale(1.6); opacity: 0; }
 }
 
@@ -199,8 +199,8 @@
   height: 72px;
   margin: 0 auto 16px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, var(--success), oklch(0.45 0.14 160));
-  box-shadow: 0 0 40px oklch(0.60 0.15 160 / 0.5);
+  background: radial-gradient(circle at 35% 30%, var(--success), #059669);
+  box-shadow: 0 12px 30px -8px rgba(16, 185, 129, 0.4);
   display: grid;
   place-items: center;
   color: white;
@@ -213,7 +213,7 @@
 .auth-spinner {
   width: 32px;
   height: 32px;
-  border: 3px solid var(--border);
+  border: 3px solid var(--accent-bg);
   border-top-color: var(--accent);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
