@@ -4,6 +4,10 @@
 @import "./auth-v2.css";
 
 @theme {
+  --color-primary: var(--primary);
+  --color-dark: var(--dark);
+  --color-cream: var(--cream);
+
   --color-bg-0: var(--bg-0);
   --color-bg-1: var(--bg-1);
   --color-bg-2: var(--bg-2);
@@ -35,29 +39,30 @@
   --color-border-strong: var(--border-strong);
 
   --font-sans: 'Inter', -apple-system, system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
-  --font-display: 'Instrument Serif', serif;
+  --font-mono: 'Inter', -apple-system, system-ui, sans-serif;
+  --font-display: 'Arial Rounded MT Bold', 'Arial', sans-serif;
+  --font-rounded: 'Arial Rounded MT Bold', 'Arial', sans-serif;
 
-  --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
   --radius-full: 999px;
 
   --shadow-sm: var(--shadow-sm);
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
 
-  --duration-fast: 120ms;
-  --duration-med: 220ms;
-  --duration-slow: 360ms;
+  --duration-fast: 150ms;
+  --duration-med: 200ms;
+  --duration-slow: 300ms;
 
-  --ease-smooth: cubic-bezier(0.2, 0, 0, 1);
+  --ease-smooth: ease;
 
   --animate-pulse-dot: pulse-dot 2s ease-in-out infinite;
-  --animate-fade-in: fade-in 320ms cubic-bezier(0.2, 0, 0, 1);
-  --animate-twinkle: twinkle 3s ease-in-out infinite;
+  --animate-fade-in: fade-in 320ms ease;
+  --animate-float: float 3s ease-in-out infinite;
 
   @keyframes pulse-dot {
     0%, 100% { opacity: 1; transform: scale(1); }
@@ -67,9 +72,9 @@
     from { opacity: 0; transform: translateY(4px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  @keyframes twinkle {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 1; }
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
   }
 }
 
@@ -82,7 +87,7 @@
     background: var(--bg-0);
     color: var(--fg-0);
     font-family: var(--font-sans);
-    font-size: 14px;
+    font-size: 15px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -91,6 +96,8 @@
 
   #app { min-height: 100vh; }
   button { font-family: inherit; }
+
+  .font-rounded { font-family: var(--font-rounded); }
 
   ::selection {
     background: var(--accent-bg);
@@ -103,4 +110,3 @@
     border-radius: var(--r-sm);
   }
 }
-
