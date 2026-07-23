@@ -8,9 +8,7 @@ import { useSettings } from '@/composables/useSettings'
 import type { FederationProviderInfo } from '@/composables/useSettings'
 import V2Card from '@/components/V2Card.vue'
 import AuthAlert from '@/components/AuthAlert.vue'
-import { useTheme } from '@/composables/useTheme'
-import logoDark from '@/assets/logo-dark.svg'
-import logoLight from '@/assets/logo-light.svg'
+import ClownLogo from '@/components/icons/ClownLogo.vue'
 import { IconMail, IconChevron, IconEye, IconDiscord, IconGitHub, IconSSOEnterprise } from '@/components/icons'
 
 const router = useRouter()
@@ -29,9 +27,6 @@ const resendingVerification = ref(false)
 const verificationResent = ref(false)
 
 const clientName = computed(() => state.clientName || 'OrionAuth')
-
-const { theme } = useTheme()
-const logoSrc = computed(() => theme.value === 'dark' ? logoDark : logoLight)
 
 const federationErrors: Record<string, string> = {
   account_exists_link_required:
@@ -140,12 +135,9 @@ async function handleSubmit() {
 
 <template>
   <V2Card path="auth.orion.io / <b>signin</b>">
-    <!-- Head: orbit logo + title -->
+    <!-- Head: logo + title -->
     <div class="v2-card__head">
-      <div class="v2-orbit">
-        <img :src="logoSrc" alt="OrionAuth" class="h-16 w-16" style="filter: drop-shadow(0 0 18px var(--accent-bg))" />
-        <span class="v2-orbit__satellite" />
-      </div>
+      <ClownLogo class="mx-auto mb-4 h-9 w-auto" />
       <h1 class="v2-card__title">Connexion a <em>{{ clientName }}</em></h1>
       <p class="v2-card__sub">Utilisez votre compte pour continuer.</p>
     </div>
