@@ -8,9 +8,7 @@ import V2Card from '@/components/V2Card.vue'
 import AuthAlert from '@/components/AuthAlert.vue'
 import DynamicField from '@/components/DynamicField.vue'
 import PasswordStrength from '@/components/PasswordStrength.vue'
-import { useTheme } from '@/composables/useTheme'
-import logoDark from '@/assets/logo-dark.svg'
-import logoLight from '@/assets/logo-light.svg'
+import ClownLogo from '@/components/icons/ClownLogo.vue'
 import { IconChevron, IconEye, IconMail } from '@/components/icons'
 
 const route = useRoute()
@@ -36,8 +34,6 @@ const loadingPreview = ref(true)
 const error = ref<string | null>(null)
 const passwordValid = ref(false)
 
-const { theme } = useTheme()
-const logoSrc = computed(() => theme.value === 'dark' ? logoDark : logoLight)
 const { schema, fetchSchema } = useRegistrationSchema('federation')
 const extras = ref<Record<string, unknown>>({})
 const renderedSchema = computed(() =>
@@ -102,10 +98,7 @@ async function handleSubmit() {
 <template>
   <V2Card path="auth.orion.io / <b>complete-account</b>">
     <div class="v2-card__head">
-      <div class="v2-orbit">
-        <img :src="logoSrc" alt="OrionAuth" class="h-16 w-16" style="filter: drop-shadow(0 0 18px var(--accent-bg))" />
-        <span class="v2-orbit__satellite" />
-      </div>
+      <ClownLogo class="mx-auto mb-4 h-9 w-auto" />
       <h1 class="v2-card__title">Finaliser votre compte</h1>
       <p class="v2-card__sub" v-if="view">
         Vous avez authentifie via <strong>{{ view.provider_display_name }}</strong>.
