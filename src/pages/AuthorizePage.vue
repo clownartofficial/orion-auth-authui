@@ -79,7 +79,9 @@ onMounted(async () => {
   // OIDC prompt=create (Initiating User Registration via OIDC 1.0): the
   // client wants the signup UX, not the login form. Route accordingly so the
   // RegisterPage knows to POST to /authorize/register with the request_id.
-  if (result.data.prompt === 'create') {
+  // `screen=signup` is the non-standard alias some RPs (clown.school) send
+  // for the same intent; it never reaches the backend.
+  if (result.data.prompt === 'create' || route.query.screen === 'signup') {
     router.push('/register')
     return
   }
