@@ -9,6 +9,14 @@ adheres to [Semantic Versioning](https://semver.org) — see
 
 —
 
+## [v1.1.0] — 2026-11-01
+
+### Added
+
+- **`screen=signup` on `/authorize`.** Treated like `prompt=create`: the
+  user lands on the OAuth signup form instead of the login form. Some
+  RPs (clown.school) send this parameter; it was silently ignored.
+
 ## [v0.19.1] — 2026-07-06
 
 ### Changed
